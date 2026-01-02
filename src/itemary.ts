@@ -78,10 +78,11 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         }
     }
 
+    const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     const sourcePath = view?.file?.path ?? "";
     const link = this.app.fileManager.generateMarkdownLink( file, sourcePath );
 
-
+    console.log( "debug: " + sourcePath + "; " + link);
 
 
     //parse detail better...
