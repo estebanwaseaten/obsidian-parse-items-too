@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, SearchComponent, prepareFuzzySearch, setIcon } from "obsidian";
+import { MarkdownView, ItemView, WorkspaceLeaf, SearchComponent, prepareFuzzySearch, setIcon } from "obsidian";
 import { ParseItemsToo } from "./main"
 import { Itemary } from "./itemary"
 import { Item, ItemSuggestionModal } from "./item";
