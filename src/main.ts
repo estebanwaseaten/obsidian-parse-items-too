@@ -163,17 +163,17 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
-		console.log( mv.file?.path );
-
-		const mode = mv.getState().mode;
-		if( mode !== "source" )
+		const leaf = mv.myleaf;
+		const vs = leaf.getViewState();
+		if( vs.state?.mode !== "source" )
 		{
 			new Notice("Please switch Editor to Edit Mode.");
-			await this.app.commands.executeCommandById("markdown:toggle-edit-mode");
-			return;
+			await leaf.setViewState({ ...vs, state: { ...vs.state, mode: "source" } });
+
 
 			await nextFrame();
 			await nextFrame();
+			return;
 		}
 		const editor = mv.editor;
 
