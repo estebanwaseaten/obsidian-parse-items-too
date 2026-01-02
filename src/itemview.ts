@@ -31,12 +31,14 @@ export class MyItemView extends ItemView
 
         const render = (q: string) => {
             //search:
-            let results;
+            let results: MyItem[];
 
             if( !q || q === "" )
             {
 
                 results = this.plugin.myItemary.getItems()
+                                .slice()    //clone not to modify source??
+                                .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true }))
                                 .slice( 0, 50 )
                                 .map(i => ({ i, m: null }));
                 console.log("all" + results[0].name );
