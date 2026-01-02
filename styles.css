@@ -8,14 +8,14 @@ If your plugin does not need CSS, delete this file.
 */
 
 
-table tr:nth-child(odd) td{
+.parse-items-too-items-table tr:nth-child(odd) td{
     background-color: #EEEEEE;
 }
-table tr:nth-child(even) td{
+.parse-items-too-items-table tr:nth-child(even) td{
     background-color: #FFFFFF;
 }
 
-table {
+.parse-items-too-items-table {
     width: 100%;
 }
 
