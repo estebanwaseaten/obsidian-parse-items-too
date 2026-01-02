@@ -31,5 +31,8 @@ export class Itemary
     extractItemsFromFile( file: TFile, frontmatter: any ): MyItem[]
     {
         console.log("extract...");
+
+        //must return item
+        return null;
     }
 }
