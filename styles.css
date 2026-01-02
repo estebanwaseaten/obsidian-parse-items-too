@@ -15,6 +15,14 @@ table tr:nth-child(even) td{
     background-color: #FFFFFF;
 }
 
+table tr {
+  border: 1px solid;
+}
+
+table {
+    width: 100%;
+}
+
 .item-name{
     font-size: 12px;
     font-weight: bold;
