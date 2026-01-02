@@ -152,7 +152,7 @@ export default class ParseItemsToo extends Plugin {
 		}*/
 	}
 
-	insertIntoEditor(text: string)
+	async insertIntoEditor(text: string)
 	{
 	    // Prefer current active editor, else fall back to the last one we saw.
 	    const mv = this.app.workspace.getActiveViewOfType( MarkdownView )
@@ -164,6 +164,22 @@ export default class ParseItemsToo extends Plugin {
 
 	    // Re-focus the editor so the caret is visible
 	    this.app.workspace.setActiveLeaf(mv.leaf, { focus: true });
+		const view = app.workspace.getActiveViewOfType( MarkdownView );
+		// 3) Switch to Reading mode explicitly
+		try
+		{
+			if( view.getMode?.() !== "source" )
+			{
+				await view.setMode?.("source");
+			}
+		} catch {
+			// Fallback (older APIs): toggle only if currently in source
+			if( view.getMode?.() === "preview" )
+			{
+				await this.app.commands.executeCommandById("markdown:toggle-source");
+			}
+		}
+
 
 	    const editor = mv.editor;
 	    editor.replaceSelection( text ); // inserts at cursor if no selection
