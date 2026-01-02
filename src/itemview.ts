@@ -118,6 +118,7 @@ export class MyItemView extends ItemView
     private goItem( i: MyItem )
     {
         console.log("go...");
+        this.plugin.openInEditor( i.link );
     }
 
     private insertItem( i: MyItem )

@@ -109,6 +109,19 @@ export default class ParseItemsToo extends Plugin {
         //return leaf.view as MyItemView;
 	}
 
+	openInEditor(linktext: string)
+	{
+		const mv = this.app.workspace.getActiveViewOfType( MarkdownView )
+			  ?? (this.lastMdLeaf?.view as MarkdownView | undefined);
+		if (!mv)
+		{
+			//open editor?!
+		}
+
+		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
+		openLinkText( linktext, "", false );
+	}
+
 	insertIntoEditor(text: string)
 	{
 	    // Prefer current active editor, else fall back to the last one we saw.
