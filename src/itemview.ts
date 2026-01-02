@@ -138,13 +138,14 @@ export class MyItemView extends ItemView
         const root = document.createElement("div");
         const container = root.createDiv({ cls: "parse-items-too-editor-item-box" });
         const textblock = container.createDiv({ cls: "parse-items-too-editor-textblock" });
-        const imgblock = container.createDiv({ cls: "parse-items-too-editor-imgblock" });
+
             textblock.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
             textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
-            textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
+            //textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
 
         if( i.imagePath !== "" )
         {
+            const imgblock = container.createDiv({ cls: "parse-items-too-editor-imgblock" });
             imgblock.createDiv( { cls: "parse-items-too-editor-imgbgblock" } )
                 .createEl( "img", { attr: {src: i.imagePath, alt: i.name} } );
         }
