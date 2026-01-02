@@ -88,7 +88,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     {
         const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], sourcePath );
         //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
-        console.log("found image path: " + dest.path );
+        console.log("found image path: " + dest?.path );
     }
 
     //![](sources/base2024/book/items/img/wings-of-flying.webp#right)
