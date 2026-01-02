@@ -30,7 +30,11 @@ export class Itemary
 
     extractItemsFromFile( file: TFile, frontmatter: any ): MyItem[]
     {
-        console.log("extract..." + frontmatter.dndata-name);
+
+
+        const raw = frontmatter?.items;
+
+        console.log("extract..." + items[0].name);
 
         //must return item
         return null;
