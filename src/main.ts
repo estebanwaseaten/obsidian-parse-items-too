@@ -1,6 +1,9 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
 import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
 import { ITEM_VIEW, MyItemView } from "./itemview";
+import { Itemary } from "./itemary"
+import { Item } from "./item";
+//import { Item } from "./item"
 
 
 // Remember to rename these classes and interfaces!
@@ -8,11 +11,13 @@ import { ITEM_VIEW, MyItemView } from "./itemview";
 export default class ParseItemsToo extends Plugin {
 	settings: ParseItemsTooSettings;
 
+	myItemary: Itemary;
+
 	async onload() {
 		console.log("loading Parse Items too...");
 		await this.loadSettings();
 
-
+		myItemary = new Itemary( this );
 
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('sword', 'Items', async (evt: MouseEvent) => {
@@ -68,8 +73,10 @@ export default class ParseItemsToo extends Plugin {
 
 	async openItemsPane()
 	{
-		let 	leaf: WorkspaceLeaf;
-		let   	presentLeaf = this.app.workspace.getLeavesOfType(ITEM_VIEW).first();
+		const { workspace } = this.app;
+
+		let 	leaf: WorkspaceLeaf | null = null;
+		let   	presentLeaf = workspace.getLeavesOfType(ITEM_VIEW).first();
 
 		if( presentLeaf && presentLeaf.view instanceof MyItemView )
 		{
@@ -78,11 +85,11 @@ export default class ParseItemsToo extends Plugin {
 		}
 		else
 		{
-			leaf = this.app.workspace.getRightLeaf(true);
+			leaf = workspace.getRightLeaf(false);
 			await leaf.setViewState({ type: ITEM_VIEW, active: true });
 		}
 
-		this.app.workspace.revealLeaf( leaf );
+		workspace.revealLeaf( leaf );
 
 		//new Notice('You clicked the sword!' + this.settings.mySetting );
         //return leaf.view as MyItemView;

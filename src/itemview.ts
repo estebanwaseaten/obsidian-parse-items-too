@@ -15,8 +15,10 @@ export class MyItemView extends ItemView
     async onOpen()
     {
         console.log("Parse Items too: open MyItemView...")
-        const container = this.contentEl;
-        container.empty();
+        this.contentEl.empty();s
+
+        const search = new SearchComponent(this.contentEl.createDiv("item-view-search"))
+
         container.createEl('h4', { text: 'Example view' });
         //this.render();
     }
