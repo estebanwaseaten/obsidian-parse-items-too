@@ -8,14 +8,13 @@ export const ITEM_VIEW = "parse-items-too-item-pane";
 export class MyItemView extends ItemView
 {
     private unsubscribe?: () => void;
+    // Keep a handle to the results container
+    private resultsEl!: HTMLElement;
 
     constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
     {
         super(leaf);
-
-        //this.plugin = plugin;
         console.log("Parse Items too: constructing MyItemView...")
-        //this.load();    //??
     }
 
     private requestRender = (() => {
@@ -27,7 +26,7 @@ export class MyItemView extends ItemView
         };
     })();
 
-    public render( q: string )
+    public render = (q: string) =>  //arrow function
     {
         //search:
         let results: MyItem[];
@@ -52,10 +51,12 @@ export class MyItemView extends ItemView
                               .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                               .slice( 0, 50 );                              //maximum 50 items shown
         }
+        //display:
+        const container = this.resultsEl;
+        container.empty();
+
         if( results.length == 0 ) return;
 
-        //display:
-        container.empty();
         const table = container.createEl("table", { cls: "my-items-table" });
         const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
@@ -98,23 +99,24 @@ export class MyItemView extends ItemView
         const search = new SearchComponent( root.createDiv("search-bar") )
         search.setPlaceholder("search for items...");
 
-        const container = root.createDiv({ cls: "search-results" });
+        //const container = root.createDiv({ cls: "search-results" });
+        this.resultsEl = root.createDiv({ cls: "search-results" });
 
-        search.onChange( this.render );
+        search.onChange( (q) => this.render(q) );
         this.render("");
     }
 
-    clickItem( i: MyItem )
+    private clickItem( i: MyItem )
     {
         console.log( "clicked on: " + i.name );
     }
 
-    goItem( i: MyItem )
+    private goItem( i: MyItem )
     {
         console.log("go...");
     }
 
-    insertItem( i: MyItem )
+    private insertItem( i: MyItem )
     {
         console.log("insert...");
     }
