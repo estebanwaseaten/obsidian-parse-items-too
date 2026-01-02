@@ -30,7 +30,7 @@ export class Itemary
 
     extractItemsFromFile( file: TFile, frontmatter: any ): MyItem[]
     {
-        console.log("extract...");
+        console.log("extract..." + frontmatter);
 
         //must return item
         return null;
