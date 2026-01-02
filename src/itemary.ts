@@ -7,17 +7,25 @@ export class Itemary
 {
     #items: MyItem[] = []
 
-    constructor( plugin: ParseItemsToo )
+    constructor()
     {
 
-        files = plugin.app.vault.getMarkdownFiles();
+    }
+
+    build( plugin: ParseItemsToo )
+    {
+        const files = plugin.app.vault.getMarkdownFiles();
         for( const file of files )
         {
             const frontMatter = plugin.app.metadataCache.getFileCache( file )?.frontmatter;
-            if( !fm ) continue;
-            items.push( extractItemsFromFile( f, fm ) )
+            if( !frontMatter ) continue;
+            this.#items.push( extractItemsFromFile( file, frontMatter ) )
         }
+    }
 
+    get items(): readonly MyItem[]
+    {
+        return this.#items;
     }
 
     extractItemsFromFile( file: TFile, frontmatter: any ): MyItem[]
