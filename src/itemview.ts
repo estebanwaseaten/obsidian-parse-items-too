@@ -32,7 +32,7 @@ export class MyItemView extends ItemView
             listEl.empty();
             if( !q ) return;
             const score = prepareFuzzySearch(q);
-            const result = items
+            const result = plugin.myItemary.getItems()
                               .map(i => ({ i, m: score(i.name) }))
                               .filter(x => x.m)
                               .sort((a, b) => a.m!.score - b.m!.score)
