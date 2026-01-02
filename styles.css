@@ -30,12 +30,16 @@ table {
 
 .my-item-view{
     border: 1px, black;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .search-bar{
 
 }
 
-.search-results{
-    
+.my-item-view .search-results{
+    min-height: 0;
+    overflow: auto; /* or overflow-y: auto; */
 }
