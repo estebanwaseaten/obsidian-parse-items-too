@@ -157,20 +157,21 @@ export default class ParseItemsToo extends Plugin {
 	    // Prefer current active editor, else fall back to the last one we saw.
 	    const mv = this.app.workspace.getActiveViewOfType( MarkdownView )
 	           ?? (this.lastMdLeaf?.view as MarkdownView | undefined);
-	    if (!mv) {
-	      new Notice("No editor is active. Open a note and place the cursor.");
-	      return;
+	    if( !mv )
+		{
+			new Notice("No editor is active. Open a note and place the cursor.");
+			return;
 	    }
 
-		if( mv.getMode?.() === "preview" )
+		const state = view.getState();
+		if( state.mode !== "source" )
 		{
-			mv.setMode?.("source");
-			await nextFrame();
-			await nextFrame();
+			await view.setState({ ...state, mode: "source" });
 		}
+		const editor = mv.editor;
 
-		mv.editor?.focus();
-	    mv.editor?.replaceSelection( text ); // inserts at cursor if no selection
+		editor.focus();
+	    editor.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
 
