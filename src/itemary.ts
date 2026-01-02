@@ -34,7 +34,7 @@ export class Itemary
 
         const raw = frontmatter?.items;
 
-        console.log("extract..." + frontmatter?.name);
+        console.log("extract..." + raw );
 
         //must return item
         return null;
