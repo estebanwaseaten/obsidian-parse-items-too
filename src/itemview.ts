@@ -33,15 +33,17 @@ export class MyItemView extends ItemView
             //search:
             if( !q ) return;
 
+            let results;
+
             if( q == "" )
             {
-                const results = this.plugin.myItemary.getItems()
+                results = this.plugin.myItemary.getItems()
                                 .slice( 0, 50 );
             }
             else
             {
                 const score = prepareFuzzySearch( q );
-                const results = this.plugin.myItemary.getItems()
+                results = this.plugin.myItemary.getItems()
                                   .map(i => ({ i, m: score(i.name) }))
                                   .filter( x => x.m )
                                   .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
