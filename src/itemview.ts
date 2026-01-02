@@ -1,5 +1,7 @@
 import { ItemView, WorkspaceLeaf, SearchComponent } from "obsidian";
 import { ParseItemsToo } from "./main"
+import { Itemary } from "./itemary"
+import { Item } from "./item";
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
 
@@ -18,6 +20,9 @@ export class MyItemView extends ItemView
         this.contentEl.empty();
 
         const search = new SearchComponent(this.contentEl.createDiv("item-view-search"))
+
+        const suggester = new MonsterSuggestionModal( this.plugin.app, search, Itemary.getItems() );
+
 
         this.contentEl.createEl('h4', { text: 'Example view' });
         this.contentEl.createEl('div', { text: 'a div' });

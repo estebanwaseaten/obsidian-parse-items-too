@@ -30,7 +30,7 @@ export class Itemary
         }
     }
 
-    get items(): readonly MyItem[]
+    getItems(): readonly MyItem[]
     {
         return this.#items;
     }
