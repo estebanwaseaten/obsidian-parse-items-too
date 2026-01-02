@@ -15,7 +15,7 @@ export interface MyItem
 }
 
 
-export class ItemSuggestionModel extends FuzzySuggestModal<MyItem>
+export class ItemSuggestionModal extends FuzzySuggestModal<MyItem>
 {
     constructor( plugin: App, private items: MyItem[], private onPick: (i: MyItem )=> void)
     {
