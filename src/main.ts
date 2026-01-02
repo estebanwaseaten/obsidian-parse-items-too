@@ -163,6 +163,8 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
+		console.log( mv.file?.path );
+
 		const mode = mv.getState().mode;
 		if( mode !== "source" )
 		{
