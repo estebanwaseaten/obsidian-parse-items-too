@@ -26,7 +26,7 @@ If your plugin does not need CSS, delete this file.
     flex: 0 0 100px;
     max-height: 100px;
     overflow: hidden;
-    #background-color: #FF0000;
+    background-color: #FFFFFF;
 }
 
 .parse-items-too-editor-imgblock img{
