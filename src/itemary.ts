@@ -26,7 +26,7 @@ export class Itemary
 
         for( const item of this.#items )
         {
-            console.log( item.name + ": " + item.detail );
+            console.debug( item.name + ": " + item.detail );
         }
     }
 
