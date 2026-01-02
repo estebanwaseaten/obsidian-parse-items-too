@@ -67,6 +67,7 @@ export default class ParseItemsToo extends Plugin {
 		if ( alreadyThere.length > 0 )
 		{
 			console.log( "itemPane already there" );
+			leaf = alreadyThere.shift();
 		}
 		else
 		{

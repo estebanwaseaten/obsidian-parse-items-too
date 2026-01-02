@@ -7,6 +7,13 @@ export class ItemView extends ItemView
 {
     constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
     {
+        console.log("Parse Items too: constructing ItemView...")
+        super(leaf);
+        this.load();    //??
+    }
 
+    onLoad()
+    {
+        console.log("Parse Items too: loading ItemView...")
     }
 }
