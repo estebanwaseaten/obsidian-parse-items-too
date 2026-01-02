@@ -163,12 +163,12 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
-		const leaf = mv.myleaf;
-		const vs = leaf.getViewState();
+		const myleaf = mv.leaf;
+		const vs = myleaf.getViewState();
 		if( vs.state?.mode !== "source" )
 		{
 			new Notice("Please switch Editor to Edit Mode.");
-			await leaf.setViewState({ ...vs, state: { ...vs.state, mode: "source" } });
+			await myleaf.setViewState({ ...vs, state: { ...vs.state, mode: "source" } });
 
 
 			await nextFrame();
