@@ -32,13 +32,14 @@ export class MyItemView extends ItemView
             console.log("render(): " + q);
             //search:
             if( !q ) return;
-            const score = prepareFuzzySearch(q);
+            const score = prepareFuzzySearch( q );
             const results = this.plugin.myItemary.getItems()
                               .map(i => ({ i, m: score(i.name) }))
                               .filter( x => x.m )
                               .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                               .slice( 0, 50 );                              //maximum 50 items shown
 
+            console.log("search yields so many results: " + results.length );
             //display:
             const table = container.createEl("table", { cls: "my-items-table" });
             const thead = table.createEl("thead");
