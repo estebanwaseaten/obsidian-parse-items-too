@@ -6,3 +6,11 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+
+table tr:nth-child(odd) td{
+    background-color: #EEEEEE;
+}
+table tr:nth-child(even) td{
+    background-color: #FFFFFF;
+}

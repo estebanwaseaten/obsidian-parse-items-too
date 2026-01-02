@@ -27,24 +27,25 @@ export class MyItemView extends ItemView
         search.setPlaceholder("search for items...");
 
         const listEl = this.contentEl.createDiv();
-
         const render = (q: string) => {
             listEl.empty();
             if( !q ) return;
             const score = prepareFuzzySearch(q);
             const results = this.plugin.myItemary.getItems()
                               .map(i => ({ i, m: score(i.name) }))
-                              .filter(x => x.m)
-                              .sort((a, b) => a.m!.score - b.m!.score)
-                              .slice(0, 50);
-              for (const { i } of results) {
-               const row = listEl.createDiv({ cls: "my-result" });
-               row.setText(i.name);
-               row.onclick = () => doSomething(i);
-             }
+                              .filter( x => x.m )
+                              .sort( (a, b) => a.m!.score - b.m!.score )
+                              .slice( 0, 5 );
+
+            for( const { i } of results )
+            {
+                const row = listEl.createDiv({ cls: "my-result" });
+                row.setText(i.name);
+                row.onclick = () => doSomething( i );
+            }
         };
 
-        search.onChange(render);
+        search.onChange( render );
 
         //const suggester = new ItemSuggestionModal( this.plugin.app, this.plugin.myItemary.getItems(), (picked) => {new Notice(`You picked ${picked.name}`);});
         //suggester.open();
