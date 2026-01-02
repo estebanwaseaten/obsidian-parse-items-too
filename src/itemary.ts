@@ -126,7 +126,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     }
 
     let infostring: String = "";
-    if( infotext?.length > 0 )
+    if( infoarray?.length > 0 )
     {
         infostring = "(";
         for (let index = 0; index < infoarray.length-1; index++)
