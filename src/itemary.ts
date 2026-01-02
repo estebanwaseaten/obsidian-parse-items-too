@@ -89,10 +89,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         const match = frontmatter["dndata-image"].match(/!\[[^\]]*]\(([^)]+)\)/);
         const raw = match?.[1] ?? "";   //set raw to match[1] if exists, else ""
         const { path: linkpath } = parseLinktext( raw );
-        //const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], "" );
-        //const sourcePath = this.app.workspace.getActiveFile()?.path ?? "";
-        //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
-        console.log("found image path: " + frontmatter["dndata-image"] + "converted: " + linkpath );
+        imagepath = linkpath;
     }
 
     //![](sources/base2024/book/items/img/wings-of-flying.webp#right)
@@ -162,7 +159,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
             markdownlink: markdownlink,
             detail: detailstring,
             infotext: infostring,
-            imagePath: frontmatter["dndata-image"],
+            imagePath: imagepath,
             cost: cost,
             weight: frontmatter["dndata-weight"],
             damage: frontmatter["dndata-damage"],
