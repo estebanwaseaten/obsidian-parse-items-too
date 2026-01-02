@@ -166,6 +166,8 @@ export default class ParseItemsToo extends Plugin {
 		const mode = mv.getState().mode;
 		if( mode !== "source" )
 		{
+			new Notice("No editor is in edit mode.");
+			return;
 			await this.app.commands.executeCommandById("markdown:toggle-edit-mode");
 			await nextFrame();
 			await nextFrame();
