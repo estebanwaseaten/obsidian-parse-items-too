@@ -59,7 +59,7 @@ function hasCssClass(frontMatter: any, cssClass: string): boolean
 function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 {
     //try to get the item name from dndata-name, aliases or filename
-    let name: String = "";
+    let name: string = "";
     if( typeof frontmatter["dndata-name"] === "string" )
     {
         name = frontmatter["dndata-name"];
@@ -75,15 +75,30 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         name = file.basename;
     }
 
-    //extract link to file
+    //extract markdown link to file
     const sourcePath = file.path;
-    const link = this.app.fileManager.generateMarkdownLink( file, sourcePath, "", name );
+    const markdownlink = this.app.fileManager.generateMarkdownLink( file, sourcePath, "", name );
+
+    //extract html link to file... (necessary?)
+    const link = "";
+
+    //extract html image path
+    let imagepath: string = "";
+    if( frontmatter["dndata-image"] )
+    {
+        const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], sourcePath );
+        //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
+        console.log("found image path: " + dest.path );
+    }
+
+    //![](sources/base2024/book/items/img/wings-of-flying.webp#right)
+    //vault.getResourcePath(file)
 
     //parse detail
     //remove links: (extract with .match())
-    let detailstring: String = "";
-    let cost: String = "";
-    let rarity: String = "";
+    let detailstring: string = "";
+    let cost: string = "";
+    let rarity: string = "";
     if( frontmatter["dndata-detail"] )
     {
         detailstring = frontmatter["dndata-detail"]
@@ -140,6 +155,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     return {
             name: name,
             link: link,
+            markdownlink: markdownlink,
             detail: detailstring,
             infotext: infostring,
             imagePath: frontmatter["dndata-image"],

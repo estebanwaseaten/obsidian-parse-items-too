@@ -122,28 +122,32 @@ export class MyItemView extends ItemView
     private goItem( i: MyItem )
     {
         console.log("go...");
-        this.plugin.openInEditor( i.link );
+        this.plugin.openInEditor( i.markdownlink );
     }
 
     private insertLink( i: MyItem )
     {
         console.log("insert link...");
-        this.plugin.insertIntoEditor( i.link );
+        this.plugin.insertIntoEditor( i.markdownlink );
     }
 
     private insertBox( i: MyItem )
     {
+
         //const root = this.plugin.document.createElement("div");
         const root = document.createElement("div");
         const container = root.createDiv({ cls: "parse-items-too-editor-item-box" });
-            container.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
-            container.createDiv( { text: i.detail, cls: "parse-items-too-editor-item-text" } );
-            container.createDiv( { text: i.infotext, cls: "parse-items-too-editor-item-text" } );
+        const textblock = root.createDiv({ cls: "parse-items-too-editor-textblock" });
+        const imgblock = root.createDiv({ cls: "parse-items-too-editor-imgblock" });
+            textblock.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
+            textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
+
+        if( i.imagePath )
+        {
+            imgblock.createEl( "img" );
+        }
 
         const fullHtml = root.innerHTML;
-
-        //console.log("insert box: " + fullHtml);
-
         this.plugin.insertIntoEditor( fullHtml );
     }
 

@@ -13,6 +13,18 @@ If your plugin does not need CSS, delete this file.
     border: 1px solid black;
     border-radius: 3px;
     padding: 4px
+    display: flex;
+}
+
+.parse-items-too-editor-textblock{
+    flex: 1;
+
+}
+
+.parse-items-too-editor-imgblock{
+    flex: 1;
+    width: 100px;
+    background-color: #FF0000;
 }
 
 .parse-items-too-editor-item-name{

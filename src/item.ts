@@ -4,6 +4,7 @@ export interface MyItem
 {
     name: string;
     link: string;
+    markdownlink: string;
     imagePath: string;
     detail: string;
     infotext: string;
