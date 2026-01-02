@@ -29,7 +29,7 @@ export class MyItemView extends ItemView
         const container = this.contentEl.createDiv({ cls: "item-search" });
 
         const render = (q: string) => {
-            console.log("render()");
+            console.log("render(): " + q);
             //search:
             if( !q ) return;
             const score = prepareFuzzySearch(q);
