@@ -37,8 +37,9 @@ export class MyItemView extends ItemView
             {
 
                 results = this.plugin.myItemary.getItems()
-                                .slice( 0, 50 );
-                console.log("all" + results.length );
+                                .slice( 0, 50 )
+                                .map(i => ({ i, m: null }));
+                console.log("all" + results[0].name );
             }
             else
             {
