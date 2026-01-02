@@ -20,6 +20,7 @@ export class MyItemView extends ItemView
 
     async render()
     {
+        console.log("Parse Items too: render() MyItemView...")
         this.statblockEl.createEl("em", { text: "Rendering Item..."  });
     }
 
