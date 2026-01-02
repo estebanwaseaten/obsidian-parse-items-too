@@ -31,11 +31,9 @@ export class MyItemView extends ItemView
 
         const render = (q: string) => {
             //search:
-            if( !q ) return;
-
             let results;
 
-            if( q == "" )
+            if( !q || q == "" )
             {
                 results = this.plugin.myItemary.getItems()
                                 .slice( 0, 50 );
@@ -49,6 +47,7 @@ export class MyItemView extends ItemView
                                   .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                                   .slice( 0, 50 );                              //maximum 50 items shown
             }
+            
             //display:
             container.empty();
             const table = container.createEl("table", { cls: "my-items-table" });
