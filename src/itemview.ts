@@ -57,7 +57,7 @@ export class MyItemView extends ItemView
 
         if( results.length == 0 ) return;
 
-        const table = container.createEl("table", { cls: "my-items-table" });
+        const table = container.createEl("table", { cls: "parse-items-too-items-table" });
         const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
         const header = thead.createEl("tr");
