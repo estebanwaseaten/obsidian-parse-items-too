@@ -81,25 +81,27 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 
     //parse detail
     //remove links: (extract with .match())
-    let detailstring = frontmatter["dndata-detail"]
-                            // remove " ([text](url))"
-                            ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")
-                            // fix spaces before commas
-                            .replace(/\s+,/g, ",")
-                            // collapse double spaces and trim
-                            .replace(/\s{2,}/g, " ")
-                            .trim();
+    if( frontmatter["dndata-detail"] )
+    {
+        let detailstring = frontmatter["dndata-detail"]
+                                // remove " ([text](url))"
+                                ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")
+                                // fix spaces before commas
+                                .replace(/\s+,/g, ",")
+                                // collapse double spaces and trim
+                                .replace(/\s{2,}/g, " ")
+                                .trim();
 
-    let cost: String = "";
-    let rarity: String = "";
-    let detailstring_lower = detailstring.toLowerCase()
-    if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact" }
-    else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary" }
-    else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare" }
-    else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare" }
-    else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon" }
-    else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common" }
-
+        let cost: String = "";
+        let rarity: String = "";
+        let detailstring_lower = detailstring.toLowerCase()
+        if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact" }
+        else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary" }
+        else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare" }
+        else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare" }
+        else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon" }
+        else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common" }
+    }
 
     if( frontmatter["dndata-cost"] )
     {
