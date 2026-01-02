@@ -19,7 +19,9 @@ export class Itemary
         {
             const frontMatter = plugin.app.metadataCache.getFileCache( file )?.frontmatter;
             if( !frontMatter ) continue;
-            this.#items.push( this.extractItemsFromFrontmatter( file, frontMatter ) )
+            if( !hasCssClass( fm, "json5e-item" ) ) continue;
+
+            this.#items.push( extractItemsFromFrontmatter( file, frontMatter ) )
         }
     }
 
@@ -27,31 +29,45 @@ export class Itemary
     {
         return this.#items;
     }
+}
 
-    extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem[]
+function hasCssClass(frontMatter: any, cssClass: string): boolean
+{
+    const raw = frontMatter?.cssclasses ?? frontMatter?.cssclass;
+    if( !raw ) return false;
+
+    let temp;
+    if( Array.isArray( raw ) )
     {
-
-
-        const raw = frontmatter?.items;
-
-        console.log("extract..." + raw );
-
-        //must return item
-        return null;
+        temp = raw.map( String );
     }
-
-    extractOneItem(): MyItem | null
+    else
     {
-    return {
-            name: "test",
-            filePath: "path",
-            details: "details",
-            cost: 1,
-            weight: 1,
-            damage: 2,
-            damage2: 3,
-            ac: "+2",
-            range: 20,
-        };
+        temp = String(raw).split(/[,\s]+/).filter(Boolean);
     }
+    return temp.includes( cls );
+}
+
+function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem[]
+{
+
+    console.log("extract..." + frontmatter["dndata-name"] );
+
+    //must return item
+    return null;
+}
+
+function extractOneItem(): MyItem | null
+{
+return {
+        name: "test",
+        filePath: "path",
+        details: "details",
+        cost: 1,
+        weight: 1,
+        damage: 2,
+        damage2: 3,
+        ac: "+2",
+        range: 20,
+    };
 }
