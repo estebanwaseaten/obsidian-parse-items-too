@@ -70,16 +70,16 @@ export class MyItemView extends ItemView
 
         for( const { i } of results )
         {
-            const tr = tbody.createEl("tr", { cls: "my-items-row", attr: { tabindex: "0" } });
-            const td = tr.createEl( "td", { cls: "item-cell" } );
-                td.createDiv( { text: i.name, cls: "item-name" } );
-                td.createDiv( { text: i.detail, cls: "item-detail" } );
+            const tr = tbody.createEl("tr", { cls: "parse-items-too-items-row", attr: { tabindex: "0" } });
+            const td = tr.createEl( "td", { cls: "parse-items-too-tem-cell" } );
+                td.createDiv( { text: i.name, cls: "parse-items-too-item-name" } );
+                td.createDiv( { text: i.detail, cls: "parse-items-too-item-detail" } );
 
-            const insertLink = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+            const insertLink = tr.createEl( "td", { text: "", cls: "parse-items-too-item-cell-button" } );
             setIcon(insertLink,'link');
-            const insertBox = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+            const insertBox = tr.createEl( "td", { text: "", cls: "parse-items-too-item-cell-button" } );
             setIcon(insertBox,'gallery-vertical');
-            const go = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+            const go = tr.createEl( "td", { text: "", cls: "parse-items-too-item-cell-button" } );
             setIcon(go,'external-link');
 
             td.addEventListener( "click", () => this.clickItem( i ));
@@ -98,13 +98,13 @@ export class MyItemView extends ItemView
     {
         const root = this.contentEl;
         root.empty();
-        root.addClass( "my-item-view" );
+        root.addClass( "parse-items-too-item-view" );
 
-        const search = new SearchComponent( root.createDiv("search-bar") )
+        const search = new SearchComponent( root.createDiv("parse-items-too-search-bar") )
         search.setPlaceholder("search for items...");
 
         //const container = root.createDiv({ cls: "search-results" });
-        this.resultsEl = root.createDiv({ cls: "search-results" });
+        this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
 
         search.onChange( (q) => this.render(q) );
         this.render("");
@@ -133,8 +133,15 @@ export class MyItemView extends ItemView
 
     private insertBox( i: MyItem )
     {
-        console.log("insert box...");
-        //this.plugin.insertIntoEditor( i.link );
+        //const root = this.plugin.document.createElement("div");
+        const root = document.createElement("div", { cls: "parse-items-too-editor-item-box" });
+            root.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
+
+        const fullHtml = root.innerHTML;
+
+        console.log("insert box: " + fullHtml);
+
+        this.plugin.insertIntoEditor( fullHtml );
     }
 
     async onClose()

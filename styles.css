@@ -7,6 +7,13 @@ If your plugin does not need CSS, delete this file.
 
 */
 
+.parse-items-too-editor-item-box{
+    width: 100%;
+    background-color: #A9C9E0;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 4px
+}
 
 .parse-items-too-items-table tr:nth-child(odd) td{
     background-color: #EEEEEE;
@@ -19,31 +26,31 @@ If your plugin does not need CSS, delete this file.
     width: 100%;
 }
 
-.item-name{
+.parse-items-too-item-name{
     font-size: 12px;
     font-weight: bold;
 }
 
-.item-detail{
+.parse-items-too-item-detail{
     font-size: 12px;
 }
 
-.item-cell-button{
+.parse-items-too-item-cell-button{
     text-align: center;
 }
 
-.my-item-view{
+.parse-items-too-item-view{
     border: 1px, black;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.search-bar{
+.parse-items-too-search-bar{
 
 }
 
-.my-item-view .search-results{
+.parse-items-too-my-item-view .parse-items-too-search-results{
     min-height: 0;
     overflow: auto; /* or overflow-y: auto; */
 }

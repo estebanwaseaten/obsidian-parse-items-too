@@ -138,7 +138,8 @@ export default class ParseItemsToo extends Plugin {
 		}
 
 		//close properties - should wait for layout ready
-		const currentLeaf = document.querySelector('.workspace-leaf.mod-active') //extracts html stuffs
+		//broken --needs to wait for load or somethign...
+	/*	const currentLeaf = document.querySelector('.workspace-leaf.mod-active') //extracts html stuffs
 		if (currentLeaf)
 		{
 			console.log("found leaf");
@@ -148,7 +149,7 @@ export default class ParseItemsToo extends Plugin {
 				console.log("collapse it!");
 				this.app.commands.executeCommandById('editor:toggle-fold-properties')
 			}
-		}
+		}*/
 	}
 
 	insertIntoEditor(text: string)
