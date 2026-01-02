@@ -17,6 +17,11 @@ export class MyItemView extends ItemView
         console.log("Parse Items too: loading MyItemView...")
     }
 
+    async render()
+    {
+        this.statblockEl.createEl("em", { text: "Rendering Item..."  });
+    }
+
     getDisplayText(): string {
         return "D&D Items";
     }
