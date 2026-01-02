@@ -69,12 +69,12 @@ export default class ParseItemsToo extends Plugin {
 	async openItemsPane()
 	{
 		let 	leaf: WorkspaceLeaf;
-		const   alreadyThere = this.app.workspace.getLeavesOfType(ITEM_VIEW);
+		let   	presentLeaf = this.app.workspace.getLeavesOfType(ITEM_VIEW).first();
 
-		if ( alreadyThere.length > 0 )
+		if( presentLeaf && presentLeaf.view instanceof MyItemView )
 		{
 			console.log( "itemPane already there" );
-			leaf = alreadyThere.shift();
+			leaf = presentLeaf;
 		}
 		else
 		{
