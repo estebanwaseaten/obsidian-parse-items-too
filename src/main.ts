@@ -119,7 +119,7 @@ export default class ParseItemsToo extends Plugin {
 		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
 		await this.app.workspace.openLinkText( link, "", false );
 
-		const view = app.workspace.getActiveViewOfType(MarkdownView);
+		const view = app.workspace.getActiveViewOfType( MarkdownView );
 		if (!view) return;
 
 		// 3) Switch to Reading mode explicitly
@@ -141,9 +141,11 @@ export default class ParseItemsToo extends Plugin {
 		const currentLeaf = document.querySelector('.workspace-leaf.mod-active') //extracts html stuffs
 		if (currentLeaf)
 		{
+			console.log("found leaf");
 			const propertiesAreFolded = currentLeaf.querySelector('.metadata-container is-collapsed')
 			if (!propertiesAreFolded)
 			{
+				console.log("collapse it!");
 				this.app.commands.executeCommandById('editor:toggle-fold-properties')
 			}
 		}
