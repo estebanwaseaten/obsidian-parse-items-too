@@ -6,12 +6,14 @@ export interface MyItem
     link: string;
     imagePath: string;
     detail: string;
+    infotext: string;
     cost: string | number;
     weight: string | number;
     damage: string | number;
     damage2: string | number;
     ac: string | number;
     range: string | number;
+    rarity: string;
 }
 
 

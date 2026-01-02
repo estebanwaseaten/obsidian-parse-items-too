@@ -80,7 +80,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     const link = this.app.fileManager.generateMarkdownLink( file, sourcePath, "", name );
 
     //parse detail
-    //remove links:
+    //remove links: (extract with .match())
     let detailstring = frontmatter["dndata-detail"]
                             // remove " ([text](url))"
                             ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")
@@ -90,17 +90,59 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
                             .replace(/\s{2,}/g, " ")
                             .trim();
 
+    let cost: String = "";
+    let rarity: String = "";
+    let detailstring_lower = detailstring.toLowerCase()
+    if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact" }
+    else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary" }
+    else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare" }
+    else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare" }
+    else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon" }
+    else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common" }
+
+
+    if( frontmatter["dndata-cost"] )
+    {
+        cost = frontmatter["dndata-cost"];
+    }
+
+
+    let infoarray: String[] = [];
+    //infotext
+    if( frontmatter["dndata-damage"] )  //assume weapon:
+    {
+        infoarray.push("Damage: " + frontmatter["dndata-damage"]);
+    }
+    if( frontmatter["dndata-damage2"] )  //assume weapon:
+    {
+        infoarray.push("Two-handed: " + frontmatter["dndata-damage"]);
+    }
+    if( frontmatter["dndata-ac"] ) //assume armor
+    {
+        infoarray.push("AC: " + frontmatter["dndata-ac"]);
+    }
+
+    let infostring: String = "(";
+    for (let index = 0; index < infoarray.length-1; index++)
+    {
+        infostring += infoarray[index] + ", ";
+    }
+    infostring += infoarray.pop() * ")";
+
+
     //must return item
     return {
             name: name,
             link: link,
             detail: detailstring,
+            infotext: infostring,
             imagePath: frontmatter["dndata-image"],
-            cost: frontmatter["dndata-cost"],
+            cost: cost,
             weight: frontmatter["dndata-weight"],
             damage: frontmatter["dndata-damage"],
             damage2: frontmatter["dndata-damage2"],
             ac: frontmatter["dndata-ac"],
             range: frontmatter["dndata-range"],
+            rarity: rarity,
         };
 }
