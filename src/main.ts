@@ -163,10 +163,10 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
-		const state = view.getState();
+		const state = mv.getState();
 		if( state.mode !== "source" )
 		{
-			await view.setState({ ...state, mode: "source" });
+			await mv.setState({ ...state, mode: "source" });
 		}
 		const editor = mv.editor;
 
