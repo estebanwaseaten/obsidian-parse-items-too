@@ -32,12 +32,21 @@ export class MyItemView extends ItemView
         const render = (q: string) => {
             //search:
             if( !q ) return;
-            const score = prepareFuzzySearch( q );
-            const results = this.plugin.myItemary.getItems()
-                              .map(i => ({ i, m: score(i.name) }))
-                              .filter( x => x.m )
-                              .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
-                              .slice( 0, 50 );                              //maximum 50 items shown
+
+            if( q == "" )
+            {
+                const results = this.plugin.myItemary.getItems()
+                                .slice( 0, 50 );
+            }
+            else
+            {
+                const score = prepareFuzzySearch( q );
+                const results = this.plugin.myItemary.getItems()
+                                  .map(i => ({ i, m: score(i.name) }))
+                                  .filter( x => x.m )
+                                  .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
+                                  .slice( 0, 50 );                              //maximum 50 items shown
+            }
             //display:
             container.empty();
             const table = container.createEl("table", { cls: "my-items-table" });
