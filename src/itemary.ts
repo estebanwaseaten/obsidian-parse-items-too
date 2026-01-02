@@ -7,10 +7,10 @@ export class Itemary extends Events
 {
     #items: MyItem[] = []
 
-    constructor()
+    /*constructor()
     {
         super(this);
-    }
+    }*/
 
     build( plugin: ParseItemsToo )
     {
