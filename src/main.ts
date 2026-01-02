@@ -117,9 +117,13 @@ export default class ParseItemsToo extends Plugin {
 		{
 			//open editor?!
 		}
+		let inner = linktext.trim();
+		if (inner.startsWith("!")) inner = inner.slice(1);
+		if (inner.startsWith("[[") && inner.endsWith("]]")) inner = inner.slice(2, -2);
+		const link = inner.split("|")[0].trim(); // e.g., "Note Name#Heading"
 
 		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
-		this.app.workspace.openLinkText( linktext, "", false );
+		this.app.workspace.openLinkText( link, "", false );
 	}
 
 	insertIntoEditor(text: string)
