@@ -81,9 +81,10 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 
     //parse detail
     //remove links: (extract with .match())
+    let detailstring: String = "";
     if( frontmatter["dndata-detail"] )
     {
-        let detailstring = frontmatter["dndata-detail"]
+        detailstring = frontmatter["dndata-detail"]
                                 // remove " ([text](url))"
                                 ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")
                                 // fix spaces before commas
