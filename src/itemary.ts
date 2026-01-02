@@ -19,7 +19,7 @@ export class Itemary
         {
             const frontMatter = plugin.app.metadataCache.getFileCache( file )?.frontmatter;
             if( !frontMatter ) continue;
-            if( !hasCssClass( fm, "json5e-item" ) ) continue;
+            if( !hasCssClass( frontMatter, "json5e-item" ) ) continue;
 
             this.#items.push( extractItemsFromFrontmatter( file, frontMatter ) )
         }
