@@ -25,19 +25,27 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-editor-imgblock{
     flex: 0 0 100px;
-    max-height: 100px;
+    max-height: 100%;
     overflow: hidden;
     border-radius: 3px;
     padding: 2px;
 }
 
+.parse-items-too-editor-imgbgblock{
+    flex: 0 0 100px;
+    max-height: 100px;
+    overflow: hidden;
+    border-radius: 3px;
+    padding: 2px;
+    background-color: #FFFFFF;
+}
+
 .parse-items-too-editor-imgblock img{
-  width: 90%;            /* make image fit the 100px column */
-  height: 90%;
+  width: 100%;            /* make image fit the 100px column */
+  height: 100%;
   object-fit: contain;        /* no distortion, full image visible */
   object-position: center;    /* center it */
   display: block;
-  background-color: #FFFFFF;
 }
 
 .parse-items-too-editor-item-name{
