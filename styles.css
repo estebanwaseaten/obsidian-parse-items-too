@@ -13,6 +13,7 @@ If your plugin does not need CSS, delete this file.
     border: 1px solid black;
     border-radius: 3px;
     padding: 4px;
+    margin: 5px;
     display: flex;
 }
 
