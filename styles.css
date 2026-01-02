@@ -15,6 +15,14 @@ If your plugin does not need CSS, delete this file.
     padding: 4px
 }
 
+.parse-items-too-editor-item-name{
+    font-weight: bold;
+}
+
+.parse-items-too-editor-item-text{
+
+}
+
 .parse-items-too-items-table tr:nth-child(odd) td{
     background-color: #EEEEEE;
 }

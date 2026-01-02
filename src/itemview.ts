@@ -137,6 +137,8 @@ export class MyItemView extends ItemView
         const root = document.createElement("div");
         const container = root.createDiv({ cls: "parse-items-too-editor-item-box" });
             container.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
+            container.createDiv( { text: i.detail, cls: "parse-items-too-editor-item-text" } );
+            container.createDiv( { text: i.infotext, cls: "parse-items-too-editor-item-text" } );
 
         const fullHtml = root.innerHTML;
 
