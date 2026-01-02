@@ -16,7 +16,7 @@ If your plugin does not need CSS, delete this file.
     margin: 5px;
     display: flex;
     #align-items: center;
-    #justify-content: center;
+    justify-content: center;
 }
 
 .parse-items-too-editor-textblock{
