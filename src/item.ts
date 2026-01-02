@@ -1,7 +1,8 @@
 export interface MyItem
 {
     name: string;
-    filePath: string;
+    link: string;
+    imagePath: string;
     details: string;
     cost: string | number;
     weight: string | number;

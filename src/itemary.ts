@@ -55,14 +55,15 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 
     //must return item
     return {
-            name: "test",
-            filePath: "path",
+            name: frontmatter["dndata-name"],
+            link: frontmatter["dndata-link"],
             details: "details",
-            cost: 1,
-            weight: 1,
-            damage: 2,
-            damage2: 3,
-            ac: "+2",
-            range: 20,
+            imagePath: frontmatter["dndata-image"],
+            cost: frontmatter["dndata-cost"],
+            weight: frontmatter["dndata-weight"],
+            damage: frontmatter["dndata-damage"],
+            damage2: frontmatter["dndata-damage2"],
+            ac: frontmatter["dndata-ac"],
+            range: frontmatter["dndata-range"],
         };
 }
