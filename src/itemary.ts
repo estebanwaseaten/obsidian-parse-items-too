@@ -48,26 +48,21 @@ function hasCssClass(frontMatter: any, cssClass: string): boolean
     return temp.includes( cssClass );
 }
 
-function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem[]
+function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 {
-
-    console.log("extract..." + frontmatter["dndata-name"] );
+    console.log("extract...");
+    //console.log("extract..." + frontmatter["dndata-name"] );
 
     //must return item
-    return null;
-}
-
-function extractOneItem(): MyItem | null
-{
-return {
-        name: "test",
-        filePath: "path",
-        details: "details",
-        cost: 1,
-        weight: 1,
-        damage: 2,
-        damage2: 3,
-        ac: "+2",
-        range: 20,
-    };
+    return {
+            name: "test",
+            filePath: "path",
+            details: "details",
+            cost: 1,
+            weight: 1,
+            damage: 2,
+            damage2: 3,
+            ac: "+2",
+            range: 20,
+        };
 }
