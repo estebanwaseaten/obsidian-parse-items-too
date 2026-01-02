@@ -58,8 +58,9 @@ export class MyItemView extends ItemView
                     td.createDiv( { text: i.detail, cls: "item-detail" } );
 
                 const insert = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
-                setIcon(insert,'info');
-                const go = tr.createEl( "td", { text: "go", cls: "item-cell-button" } );
+                setIcon(insert,'link');
+                const go = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+                setIcon(insert,'external-link');
 
                 td.addEventListener( "click", () => this.clickItem( i ));
                 td.addEventListener( "contextmenu", () => this.clickItem( i ));
@@ -67,8 +68,8 @@ export class MyItemView extends ItemView
                                     if (ev.key === "Enter") this.clickItem(i);
                                 });
 
-                insert.addEventListener( "click", () => { console.log("insert..."); });
-                go.addEventListener( "click", () => { console.log("go..."); });
+                insert.addEventListener( "click", () => this.insertItem(i));
+                go.addEventListener( "click", () => this.goItem(i));
             }
         };
 
@@ -79,6 +80,16 @@ export class MyItemView extends ItemView
     clickItem( i: MyItem )
     {
         console.log( "clicked on: " + i.name );
+    }
+
+    goItem( i: MyItem )
+    {
+        console.log("go...");
+    }
+
+    insertItem( i: MyItem )
+    {
+        console.log("insert...");
     }
 
     async onClose()
