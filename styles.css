@@ -12,7 +12,7 @@ If your plugin does not need CSS, delete this file.
     background-color: #A9C9E0;
     border: 1px solid black;
     border-radius: 3px;
-    padding: 4px
+    padding: 4px;
     display: flex;
 }
 
@@ -24,7 +24,7 @@ If your plugin does not need CSS, delete this file.
     border: 1px solid blue;
     width: 100px;
     max-height: 100px;
-    #overflow: hidden;
+    overflow: hidden;
     #background-color: #FF0000;
 }
 
