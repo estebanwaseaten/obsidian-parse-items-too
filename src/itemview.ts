@@ -134,8 +134,7 @@ export class MyItemView extends ItemView
     private insertBox( i: MyItem )
     {
         //const root = this.plugin.document.createElement("div");
-        const root = document.createElement("div", { cls: "parse-items-too-editor-item-box" });
-            root.createDiv( { cls: "arse-items-too-editor-item-box" } );
+        const root = this.plugin.document.createElement("div", { cls: "parse-items-too-editor-item-box" });
             root.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
 
         const fullHtml = root.innerHTML;
