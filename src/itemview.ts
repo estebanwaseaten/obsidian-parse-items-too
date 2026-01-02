@@ -27,21 +27,36 @@ export class MyItemView extends ItemView
         search.setPlaceholder("search for items...");
 
         const listEl = this.contentEl.createDiv();
+
         const render = (q: string) => {
-            listEl.empty();
+            //search:
             if( !q ) return;
             const score = prepareFuzzySearch(q);
             const results = this.plugin.myItemary.getItems()
                               .map(i => ({ i, m: score(i.name) }))
                               .filter( x => x.m )
-                              .sort( (a, b) => a.m!.score - b.m!.score )
-                              .slice( 0, 5 );
+                              .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
+                              .slice( 0, 50 );                              //maximum 50 items shown
+
+            //display:
+            const table = container.createEl("table", { cls: "my-items-table" });
+            const thead = table.createEl("thead");
+            const tbody = table.createEl("tbody");
+            const header = thead.createEl("tr");
+            header.createEl( "th", "Name" );
+
+            tbody.empty();
 
             for( const { i } of results )
             {
-                const row = listEl.createDiv({ cls: "my-result" });
-                row.setText(i.name);
-                row.onclick = () => doSomething( i );
+                const tr = tbody.createEl("tr", { cls: "my-items-row" });
+                tr.createEl( "td", {text: i.name })
+
+                tr.addEventListener( "click", () => doSomething?.( i ));
+                tr.addEventListener("keydown", (ev) => {
+                                    if (ev.key === "Enter") doSomething?.(i);
+                                });
+                tr.tabIndex = 0;
             }
         };
 
@@ -53,6 +68,7 @@ export class MyItemView extends ItemView
     //    this.contentEl.createEl('h4', { text: 'Example view' });
     //    this.contentEl.createEl('div', { text: 'a div' });
         //this.render();
+        render("");
     }
 
     async onClose()
