@@ -86,7 +86,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     let imagepath: string = "";
     if( frontmatter["dndata-image"] )
     {
-        const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], sourcePath );
+        const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], "" );
         //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
         console.log("found image path: " + dest?.path );
     }
