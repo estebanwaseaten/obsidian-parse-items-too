@@ -17,14 +17,15 @@ If your plugin does not need CSS, delete this file.
 }
 
 .parse-items-too-editor-textblock{
-
+    border: 1px solid green;
 }
 
 .parse-items-too-editor-imgblock{
+    border: 1px solid blue;
     width: 100px;
     max-height: 100px;
-    overflow: hidden; 
-    background-color: #FF0000;
+    #overflow: hidden;
+    #background-color: #FF0000;
 }
 
 .parse-items-too-editor-item-name{
