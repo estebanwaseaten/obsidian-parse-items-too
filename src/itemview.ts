@@ -1,19 +1,23 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { ParseItemsToo } from "./main"
 
-export const ITEM_VIEW = "parse-items-too-creature-pane";
+export const ITEM_VIEW = "parse-items-too-item-pane";
 
-export class ItemView extends ItemView
+export class MyItemView extends ItemView
 {
     constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
     {
-        console.log("Parse Items too: constructing ItemView...")
+        console.log("Parse Items too: constructing MyItemView...")
         super(leaf);
         this.load();    //??
     }
 
     onLoad()
     {
-        console.log("Parse Items too: loading ItemView...")
+        console.log("Parse Items too: loading MyItemView...")
+    }
+
+    getViewType(): string {
+        return ITEM_VIEW;
     }
 }

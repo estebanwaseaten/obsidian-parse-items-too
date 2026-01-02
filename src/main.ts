@@ -79,7 +79,7 @@ export default class ParseItemsToo extends Plugin {
 
 		new Notice('You clicked the sword!' + this.settings.mySetting );
 
-        return leaf.view as ItemView;
+        return leaf.view as MyItemView;
 	}
 }
 
