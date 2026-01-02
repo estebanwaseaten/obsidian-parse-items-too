@@ -1,9 +1,9 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Events } from 'obsidian';
 
 import { ParseItemsToo } from "./main"
 import { MyItem } from "./item";
 
-export class Itemary
+export class Itemary extends Events
 {
     #items: MyItem[] = []
 
@@ -28,6 +28,8 @@ export class Itemary
         {
             console.debug( item.name + ": " + item.detail );
         }
+        
+        this.trigger("changed"); //notifies all listeners
     }
 
     getItems(): readonly MyItem[]
