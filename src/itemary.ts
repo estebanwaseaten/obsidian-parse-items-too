@@ -82,6 +82,8 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     //parse detail
     //remove links: (extract with .match())
     let detailstring: String = "";
+    let cost: String = "";
+    let rarity: String = "";
     if( frontmatter["dndata-detail"] )
     {
         detailstring = frontmatter["dndata-detail"]
@@ -93,8 +95,6 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
                                 .replace(/\s{2,}/g, " ")
                                 .trim();
 
-        let cost: String = "";
-        let rarity: String = "";
         let detailstring_lower = detailstring.toLowerCase()
         if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact" }
         else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary" }
