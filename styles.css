@@ -31,7 +31,7 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-editor-imgblock img{
   width: 100%;            /* make image fit the 100px column */
-  height: auto;
+  height: 100%;
   display: block;
 }
 
