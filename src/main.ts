@@ -172,7 +172,8 @@ export default class ParseItemsToo extends Plugin {
 		}
 		const editor = mv.editor;
 
-		//editor.focus();
+		editor.focus();
+		editor.setCursor(0);
 	    editor.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
