@@ -26,7 +26,7 @@ export class Itemary
 
         for( const item of this.#items )
         {
-            console.log( item.name + ": " + item.details );
+            console.log( item.name + ": " + item.detail );
         }
     }
 
@@ -62,7 +62,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     return {
             name: frontmatter["dndata-name"],
             link: frontmatter["dndata-link"],
-            details: frontmatter["dndata-details"],
+            detail: frontmatter["dndata-detail"],
             imagePath: frontmatter["dndata-image"],
             cost: frontmatter["dndata-cost"],
             weight: frontmatter["dndata-weight"],

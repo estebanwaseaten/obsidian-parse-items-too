@@ -3,7 +3,7 @@ export interface MyItem
     name: string;
     link: string;
     imagePath: string;
-    details: string;
+    detail: string;
     cost: string | number;
     weight: string | number;
     damage: string | number;
