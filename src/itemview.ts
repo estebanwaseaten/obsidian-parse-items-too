@@ -7,8 +7,11 @@ export const ITEM_VIEW = "parse-items-too-item-pane";
 
 export class MyItemView extends ItemView
 {
+    plugin: ParseItemsToo;
+
     constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
     {
+        this.plugin = plugin;
         console.log("Parse Items too: constructing MyItemView...")
         super(leaf);
         this.load();    //??
@@ -21,7 +24,7 @@ export class MyItemView extends ItemView
 
         const search = new SearchComponent(this.contentEl.createDiv("item-view-search"))
 
-        const suggester = new ItemSuggestionModal( this.plugin.app, Itemary.getItems(), (picked) => {new Notice(`You picked ${picked.name}`);});
+        const suggester = new ItemSuggestionModal( this.plugin.app, this.plugin.myItemary.getItems(), (picked) => {new Notice(`You picked ${picked.name}`);});
         suggester.open();
 
         this.contentEl.createEl('h4', { text: 'Example view' });
