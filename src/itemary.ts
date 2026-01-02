@@ -23,6 +23,11 @@ export class Itemary
 
             this.#items.push( extractItemsFromFrontmatter( file, frontMatter ) )
         }
+
+        for( const item of this.#items )
+        {
+            console.log( item.name + ": " + item.details );
+        }
     }
 
     get items(): readonly MyItem[]
@@ -57,7 +62,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     return {
             name: frontmatter["dndata-name"],
             link: frontmatter["dndata-link"],
-            details: "details",
+            details: frontmatter["dndata-details"],
             imagePath: frontmatter["dndata-image"],
             cost: frontmatter["dndata-cost"],
             weight: frontmatter["dndata-weight"],
