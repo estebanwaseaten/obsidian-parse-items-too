@@ -15,6 +15,7 @@ export class MyItemView extends ItemView
     onLoad()
     {
         console.log("Parse Items too: loading MyItemView...")
+        this.render();
     }
 
     async render()
