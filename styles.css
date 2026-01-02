@@ -28,6 +28,10 @@ If your plugin does not need CSS, delete this file.
     font-size: 12px;
 }
 
+.item-cell-button{
+    text-align: center;
+}
+
 .my-item-view{
     border: 1px, black;
     height: 100%;

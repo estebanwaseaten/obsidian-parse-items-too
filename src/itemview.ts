@@ -64,6 +64,7 @@ export class MyItemView extends ItemView
         header.createEl( "th", "Name" );
         header.createEl( "th", "" );
         header.createEl( "th", "" );
+        header.createEl( "th", "" );
 
         tbody.empty();
 
@@ -74,19 +75,22 @@ export class MyItemView extends ItemView
                 td.createDiv( { text: i.name, cls: "item-name" } );
                 td.createDiv( { text: i.detail, cls: "item-detail" } );
 
-            const insert = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
-            setIcon(insert,'link');
+            const insertLink = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+            setIcon(insertLink,'link');
+            const insertBox = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+            setIcon(insertBox,'gallery-vertical');
             const go = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
             setIcon(go,'external-link');
 
             td.addEventListener( "click", () => this.clickItem( i ));
             td.addEventListener( "contextmenu", () => this.clickItem( i ));
-            td.addEventListener( "keydown", (ev) => {
-                                if (ev.key === "Enter") this.clickItem(i);
-                            });
-
-            insert.addEventListener( "click", () => this.insertItem(i));
+            //td.addEventListener( "keydown", (ev) => {
+            //                    if (ev.key === "Enter") this.clickItem(i); });
+            insertLink.addEventListener( "click", () => this.insertLink(i));
+            insertBox.addEventListener( "click", () => this.insertBox(i));
             go.addEventListener( "click", () => this.goItem(i));
+
+
         }
     };
 
@@ -121,10 +125,16 @@ export class MyItemView extends ItemView
         this.plugin.openInEditor( i.link );
     }
 
-    private insertItem( i: MyItem )
+    private insertLink( i: MyItem )
     {
-        console.log("insert...");
+        console.log("insert link...");
         this.plugin.insertIntoEditor( i.link );
+    }
+
+    private insertBox( i: MyItem )
+    {
+        console.log("insert box...");
+        //this.plugin.insertIntoEditor( i.link );
     }
 
     async onClose()
