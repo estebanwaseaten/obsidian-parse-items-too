@@ -50,8 +50,12 @@ export default class ParseItemsToo extends Plugin {
 		this.registerView( ITEM_VIEW, ( leaf: WorkspaceLeaf ) => new MyItemView( leaf, this ) );
 	}
 
-	onunload() {
+	onunload()
+	{
 		console.log("unloading Parse Items too...");
+		this.app.workspace
+		   .getLeavesOfType(ITEM_VIEW)
+		   .forEach((leaf) => leaf.detach());
 	}
 
 	async loadSettings() {
