@@ -104,6 +104,10 @@ export class MyItemView extends ItemView
 
         search.onChange( (q) => this.render(q) );
         this.render("");
+
+        const handler = () => this.render();
+        // Auto-cleaned when the view unloads:
+        this.registerEvent(this.plugin.myItemary.on("changed", handler));
     }
 
     private clickItem( i: MyItem )
