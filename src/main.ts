@@ -12,7 +12,7 @@ export default class ParseItemsToo extends Plugin {
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('sword', 'Items', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('You clicked the sword!');
+			new Notice('You clicked the sword!' + settings.mySetting );
 		});
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
