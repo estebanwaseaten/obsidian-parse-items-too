@@ -20,17 +20,13 @@ export class MyItemView extends ItemView
 
     async onOpen()
     {
-        console.log("Parse Items too: open MyItemView...")
         this.contentEl.empty();
-
         const search = new SearchComponent( this.contentEl.createDiv("item-view-search") )
         search.setPlaceholder("search for items...");
 
         const container = this.contentEl.createDiv({ cls: "item-search" });
 
         const render = (q: string) => {
-            container.empty();
-            console.log("render(): " + q);
             //search:
             if( !q ) return;
             const score = prepareFuzzySearch( q );
@@ -39,9 +35,8 @@ export class MyItemView extends ItemView
                               .filter( x => x.m )
                               .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                               .slice( 0, 50 );                              //maximum 50 items shown
-
-            console.log("search yields so many results: " + results.length );
             //display:
+            container.empty();
             const table = container.createEl("table", { cls: "my-items-table" });
             const thead = table.createEl("thead");
             const tbody = table.createEl("tbody");
@@ -52,14 +47,13 @@ export class MyItemView extends ItemView
 
             for( const { i } of results )
             {
-                const tr = tbody.createEl("tr", { cls: "my-items-row" });
+                const tr = tbody.createEl("tr", { cls: "my-items-row", attr: { tabindex: "0" } });
                 tr.createEl( "td", {text: i.name })
 
-                tr.addEventListener( "click", () => clickItem?.( i ));
+                tr.addEventListener( "click", () => this.clickItem( i ));
                 tr.addEventListener("keydown", (ev) => {
-                                    if (ev.key === "Enter") clickItem?.(i);
+                                    if (ev.key === "Enter") this.clickItem(i);
                                 });
-                tr.tabIndex = 0;
             }
         };
 
