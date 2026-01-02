@@ -19,7 +19,7 @@ export class Itemary
         {
             const frontMatter = plugin.app.metadataCache.getFileCache( file )?.frontmatter;
             if( !frontMatter ) continue;
-            this.#items.push( this.extractItemsFromFile( file, frontMatter ) )
+            this.#items.push( this.extractItemsFromFrontmatter( file, frontMatter ) )
         }
     }
 
@@ -28,7 +28,7 @@ export class Itemary
         return this.#items;
     }
 
-    extractItemsFromFile( file: TFile, frontmatter: any ): MyItem[]
+    extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem[]
     {
 
 
@@ -38,5 +38,20 @@ export class Itemary
 
         //must return item
         return null;
+    }
+
+    extractOneItem(): MyItem | null
+    {
+    return {
+            name: "test",
+            filePath: "path",
+            details: "details",
+            cost: 1,
+            weight: 1,
+            damage: 2,
+            damage2: 3,
+            ac: "+2",
+            range: 20,
+        };
     }
 }
