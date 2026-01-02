@@ -119,7 +119,7 @@ export default class ParseItemsToo extends Plugin {
 		}
 
 		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
-		openLinkText( linktext, "", false );
+		this.app.workspace.openLinkText( linktext, "", false );
 	}
 
 	insertIntoEditor(text: string)
