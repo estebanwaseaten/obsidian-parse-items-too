@@ -45,7 +45,7 @@ function hasCssClass(frontMatter: any, cssClass: string): boolean
     {
         temp = String(raw).split(/[,\s]+/).filter(Boolean);
     }
-    return temp.includes( cls );
+    return temp.includes( cssClass );
 }
 
 function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem[]
