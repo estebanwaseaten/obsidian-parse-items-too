@@ -45,6 +45,8 @@ export class MyItemView extends ItemView
             const tbody = table.createEl("tbody");
             const header = thead.createEl("tr");
             header.createEl( "th", "Name" );
+            header.createEl( "th", "" );
+            header.createEl( "th", "" );
 
             tbody.empty();
 
@@ -55,21 +57,18 @@ export class MyItemView extends ItemView
                     td.createDiv( { text: i.name, cls: "item-name" } );
                     td.createDiv( { text: i.detail, cls: "item-detail" } );
 
+                tr.createEl( "td", { text: "a", cls: "item-cell-button" } );
+                tr.createEl( "td", { text: "b", cls: "item-cell-button" } );
+
                 tr.addEventListener( "click", () => this.clickItem( i ));
-                tr.addEventListener("keydown", (ev) => {
+                tr.addEventListener( "contextmenu", () => this.clickItem( i ));
+                tr.addEventListener( "keydown", (ev) => {
                                     if (ev.key === "Enter") this.clickItem(i);
                                 });
             }
         };
 
         search.onChange( render );
-
-        //const suggester = new ItemSuggestionModal( this.plugin.app, this.plugin.myItemary.getItems(), (picked) => {new Notice(`You picked ${picked.name}`);});
-        //suggester.open();
-
-    //    this.contentEl.createEl('h4', { text: 'Example view' });
-    //    this.contentEl.createEl('div', { text: 'a div' });
-        //this.render();
         render("");
     }
 

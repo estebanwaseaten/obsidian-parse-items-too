@@ -58,6 +58,8 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     console.log("extract...");
     //console.log("extract..." + frontmatter["dndata-name"] );
 
+    //parse detail better...
+
     //must return item
     return {
             name: frontmatter["dndata-name"],
