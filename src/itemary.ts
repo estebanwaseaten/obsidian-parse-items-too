@@ -25,10 +25,12 @@ export class Itemary extends Events
             this.#items = this.#items.filter(x => x != null);
         }
 
-        for( const item of this.#items )
+        console.log( "extracted " + this.#items.length + " items.");
+
+        /*for( const item of this.#items )
         {
             console.debug( item.name + ": " + item.detail );
-        }
+        }*/
 
         this.trigger("changed"); //notifies all listeners
     }
@@ -63,12 +65,12 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     if( typeof frontmatter["dndata-name"] === "string" )
     {
         name = frontmatter["dndata-name"];
-        console.log("extract..." );
+        //console.log("extract..." );
     }
     else if( Array.isArray(frontmatter?.["aliases"]) )
     {
         name = frontmatter["aliases"][0];
-        console.log("extract..." + frontmatter["aliases"][0] );
+        //console.log("extract..." + frontmatter["aliases"][0] );
     }
     else //maybe add a setting to skip (i.e. return null)
     {
