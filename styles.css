@@ -15,10 +15,6 @@ table tr:nth-child(even) td{
     background-color: #FFFFFF;
 }
 
-table tr {
-  border: 1px solid;
-}
-
 table {
     width: 100%;
 }
@@ -30,4 +26,8 @@ table {
 
 .item-detail{
     font-size: 12px;
+}
+
+.item-search{
+    border: 1px, black;
 }
