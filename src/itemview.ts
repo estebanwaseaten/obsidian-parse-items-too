@@ -17,6 +17,12 @@ export class MyItemView extends ItemView
         console.log("Parse Items too: loading MyItemView...")
     }
 
+    getDisplayText(): string {
+        return "D&D Items";
+    }
+    getIcon(): string {
+        return "sword";
+    }
     getViewType(): string {
         return ITEM_VIEW;
     }
