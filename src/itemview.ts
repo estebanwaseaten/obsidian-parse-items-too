@@ -35,9 +35,10 @@ export class MyItemView extends ItemView
 
             if( !q || q === "" )
             {
-                console.log("all");
+
                 results = this.plugin.myItemary.getItems()
-                                .slice( 0, 50 );
+                                .slice( 1, 50 );
+                console.log("all" + results[3].name );
             }
             else
             {
