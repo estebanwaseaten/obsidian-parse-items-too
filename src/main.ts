@@ -163,23 +163,29 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
+		let switchBack = false;
+
 		const myleaf = mv.leaf;
 		const vs = myleaf.getViewState();
 		if( vs.state?.mode !== "source" )
 		{
-			new Notice("Please switch Editor to Edit Mode.");
+			//new Notice("Please switch Editor to Edit Mode.");
 			await myleaf.setViewState({ ...vs, state: { ...vs.state, mode: "source" } });
-
-
 			await nextFrame();
 			await nextFrame();
-		//	return;
+			switchBack = true;
 		}
 		const editor = mv.editor;
 
 		editor.focus();
-		//editor.setCursor(0);
 	    editor.replaceSelection( text ); // inserts at cursor if no selection
+
+		if( switchBack )
+		{
+			await myleaf.setViewState({ ...vs, state: { ...vs.state, mode: "preview" } });
+			await nextFrame();
+			await nextFrame();
+		}
 	}
 }
 
