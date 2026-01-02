@@ -33,13 +33,15 @@ export class MyItemView extends ItemView
             //search:
             let results;
 
-            if( !q || q == "" )
+            if( !q || q === "" )
             {
+                console.log("all");
                 results = this.plugin.myItemary.getItems()
                                 .slice( 0, 50 );
             }
             else
             {
+                console.log("subset");
                 const score = prepareFuzzySearch( q );
                 results = this.plugin.myItemary.getItems()
                                   .map(i => ({ i, m: score(i.name) }))
@@ -47,7 +49,7 @@ export class MyItemView extends ItemView
                                   .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                                   .slice( 0, 50 );                              //maximum 50 items shown
             }
-            
+
             //display:
             container.empty();
             const table = container.createEl("table", { cls: "my-items-table" });
@@ -70,7 +72,7 @@ export class MyItemView extends ItemView
                 const insert = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
                 setIcon(insert,'link');
                 const go = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
-                setIcon(insert,'external-link');
+                setIcon(go,'external-link');
 
                 td.addEventListener( "click", () => this.clickItem( i ));
                 td.addEventListener( "contextmenu", () => this.clickItem( i ));
