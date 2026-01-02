@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Document } from 'obsidian';
 import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
 import { ITEM_VIEW, MyItemView } from "./itemview";
 import { Itemary } from "./itemary"
@@ -124,6 +124,16 @@ export default class ParseItemsToo extends Plugin {
 
 		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
 		this.app.workspace.openLinkText( link, "", false );
+
+		const currentLeaf = document.querySelector('.workspace-leaf.mod-active') //extracts html stuffs
+		if (currentLeaf)
+		{
+			const propertiesAreFolded = currentLeaf.querySelector('.metadata-container is-collapsed')
+			if (!propertiesAreFolded)
+			{
+				this.app.commands.executeCommandById('editor:toggle-fold-properties')
+			}
+		}
 	}
 
 	insertIntoEditor(text: string)
