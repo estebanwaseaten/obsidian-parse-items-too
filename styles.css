@@ -14,3 +14,12 @@ table tr:nth-child(odd) td{
 table tr:nth-child(even) td{
     background-color: #FFFFFF;
 }
+
+.item-name{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.item-detail{
+    font-size: 12px;
+}

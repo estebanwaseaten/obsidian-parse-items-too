@@ -48,7 +48,9 @@ export class MyItemView extends ItemView
             for( const { i } of results )
             {
                 const tr = tbody.createEl("tr", { cls: "my-items-row", attr: { tabindex: "0" } });
-                tr.createEl( "td", {text: i.name })
+                const td = tr.createEl( "td", { cls: "item-cell" } );
+                    td.createDiv( { text: i.name, cls: "item-name" } );
+                    td.createDiv( { text: i.detail, cls: "item-detail" } );
 
                 tr.addEventListener( "click", () => this.clickItem( i ));
                 tr.addEventListener("keydown", (ev) => {
