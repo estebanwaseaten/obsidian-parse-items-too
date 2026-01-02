@@ -86,9 +86,12 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     let imagepath: string = "";
     if( frontmatter["dndata-image"] )
     {
-        const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], "" );
+        const match = frontmatter["dndata-image"].match(/!\[[^\]]*]\(([^)]+)\)/);
+        const { path: linkpath } = parseLinktext(raw);
+        //const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], "" );
+        //const sourcePath = this.app.workspace.getActiveFile()?.path ?? "";
         //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
-        console.log("found image path: " + frontmatter["dndata-image"] + "coverted: " + dest?.path );
+        console.log("found image path: " + frontmatter["dndata-image"] + "converted: " + linkpath );
     }
 
     //![](sources/base2024/book/items/img/wings-of-flying.webp#right)
