@@ -55,9 +55,9 @@ export class MyItemView extends ItemView
                 const tr = tbody.createEl("tr", { cls: "my-items-row" });
                 tr.createEl( "td", {text: i.name })
 
-                tr.addEventListener( "click", () => doSomething?.( i ));
+                tr.addEventListener( "click", () => clickItem?.( i ));
                 tr.addEventListener("keydown", (ev) => {
-                                    if (ev.key === "Enter") doSomething?.(i);
+                                    if (ev.key === "Enter") clickItem?.(i);
                                 });
                 tr.tabIndex = 0;
             }
@@ -72,6 +72,11 @@ export class MyItemView extends ItemView
     //    this.contentEl.createEl('div', { text: 'a div' });
         //this.render();
         render("");
+    }
+
+    clickItem( i: MyItem )
+    {
+        console.log( "clicked on: " + i.name );
     }
 
     async onClose()
