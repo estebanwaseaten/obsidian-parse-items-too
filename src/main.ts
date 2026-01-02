@@ -13,6 +13,9 @@ export default class ParseItemsToo extends Plugin {
 
 	myItemary: Itemary;
 
+	//keep track of last leaf
+	private lastMdLeaf: WorkspaceLeaf | null = null;
+
 	async onload() {
 		console.log("loading Parse Items too...");
 		await this.loadSettings();
@@ -56,7 +59,14 @@ export default class ParseItemsToo extends Plugin {
 
 		this.myItemary = new Itemary();
 		this.app.workspace.onLayoutReady( () => this.myItemary.build( this ) );
-		
+
+		//whenever the leaf changes, write to tracker this.lastMdLeaf:
+		this.registerEvent(
+      		this.app.workspace.on("active-leaf-change", (leaf) => {
+        		const mv = this.app.workspace.getActiveViewOfType( MarkdownView );
+        		if (mv) this.lastMdLeaf = mv.leaf;
+      		}));
+
 	}
 
 	onunload()
@@ -97,6 +107,23 @@ export default class ParseItemsToo extends Plugin {
 
 		//new Notice('You clicked the sword!' + this.settings.mySetting );
         //return leaf.view as MyItemView;
+	}
+
+	insertIntoEditor(text: string)
+	{
+	    // Prefer current active editor, else fall back to the last one we saw.
+	    const mv = this.app.workspace.getActiveViewOfType( MarkdownView )
+	           ?? (this.lastMdLeaf?.view as MarkdownView | undefined);
+	    if (!mv) {
+	      new Notice("No editor is active. Open a note and place the cursor.");
+	      return;
+	    }
+
+	    // Re-focus the editor so the caret is visible
+	    this.app.workspace.setActiveLeaf(mv.leaf, { focus: true });
+
+	    const editor = mv.editor;
+	    editor.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
 

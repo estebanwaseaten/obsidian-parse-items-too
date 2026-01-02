@@ -123,9 +123,7 @@ export class MyItemView extends ItemView
     private insertItem( i: MyItem )
     {
         console.log("insert...");
-        const view = this.app.workspace.getActiveViewOfType( MarkdownView );
-        const editor = view?.editor;
-        editor?.replaceSelection( i.link );
+        this.plugin.insertIntoEditor( i.link );
     }
 
     async onClose()
