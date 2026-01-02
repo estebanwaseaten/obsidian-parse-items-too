@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, SearchComponent, prepareFuzzySearch } from "obsidian";
+import { ItemView, WorkspaceLeaf, SearchComponent, prepareFuzzySearch, setIcon } from "obsidian";
 import { ParseItemsToo } from "./main"
 import { Itemary } from "./itemary"
 import { Item, ItemSuggestionModal } from "./item";
@@ -57,7 +57,8 @@ export class MyItemView extends ItemView
                     td.createDiv( { text: i.name, cls: "item-name" } );
                     td.createDiv( { text: i.detail, cls: "item-detail" } );
 
-                const insert = tr.createEl( "td", { text: "insert", cls: "item-cell-button" } );
+                const insert = tr.createEl( "td", { text: "", cls: "item-cell-button" } );
+                setIcon(insert,'info');
                 const go = tr.createEl( "td", { text: "go", cls: "item-cell-button" } );
 
                 td.addEventListener( "click", () => this.clickItem( i ));
