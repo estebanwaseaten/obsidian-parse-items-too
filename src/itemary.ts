@@ -142,6 +142,14 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     {
         infoarray.push("AC: " + frontmatter["dndata-ac"]);
     }
+    if( cost !== "" ) //assume armor
+    {
+        infoarray.push("cost: " + cost);
+    }
+    if( frontmatter["dndata-weight"] ) //assume armor
+    {
+        infoarray.push("weight: " + frontmatter["dndata-weight"]);
+    }
 
     let infostring: String = "";
     if( infoarray.length > 0 )
