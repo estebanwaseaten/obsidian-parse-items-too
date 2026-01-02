@@ -23,12 +23,13 @@ export class MyItemView extends ItemView
         console.log("Parse Items too: open MyItemView...")
         this.contentEl.empty();
 
-        const search = new SearchComponent(this.contentEl.createDiv("item-view-search"))
+        const search = new SearchComponent( this.contentEl.createDiv("item-view-search") )
         search.setPlaceholder("search for items...");
 
         const container = this.contentEl.createDiv({ cls: "item-search" });
 
         const render = (q: string) => {
+            container.empty();
             console.log("render(): " + q);
             //search:
             if( !q ) return;
