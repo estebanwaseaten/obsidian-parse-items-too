@@ -18,14 +18,21 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-editor-textblock{
     border: 1px solid green;
+    flex: 1 1 auto;
 }
 
 .parse-items-too-editor-imgblock{
     border: 1px solid blue;
-    width: 100px;
+    flex: 0 0 100px;
     max-height: 100px;
     overflow: hidden;
     #background-color: #FF0000;
+}
+
+.parse-items-too-editor-imgblock img{
+  width: 100%;            /* make image fit the 100px column */
+  height: auto;
+  display: block;
 }
 
 .parse-items-too-editor-item-name{
