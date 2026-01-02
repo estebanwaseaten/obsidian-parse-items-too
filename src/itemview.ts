@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf } from "obsidian";
+import { ItemView, WorkspaceLeaf, SearchComponent } from "obsidian";
 import { ParseItemsToo } from "./main"
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
