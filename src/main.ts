@@ -54,8 +54,8 @@ export default class ParseItemsToo extends Plugin {
 
 		this.registerView( ITEM_VIEW, ( leaf: WorkspaceLeaf ) => new MyItemView( leaf, this ) );
 
-		myItemary = new Itemary();
-		this.app.workspace.onLayoutReady( () => myItemary.build() );
+		this.myItemary = new Itemary();
+		this.app.workspace.onLayoutReady( () => this.myItemary.build() );
 	}
 
 	onunload()
