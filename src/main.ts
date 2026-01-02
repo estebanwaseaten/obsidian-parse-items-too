@@ -84,8 +84,7 @@ export default class ParseItemsToo extends Plugin {
 
 		this.app.workspace.revealLeaf( leaf );
 
-		new Notice('You clicked the sword!' + this.settings.mySetting );
-
+		//new Notice('You clicked the sword!' + this.settings.mySetting );
         //return leaf.view as MyItemView;
 	}
 }

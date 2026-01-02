@@ -15,7 +15,10 @@ export class MyItemView extends ItemView
     async onOpen()
     {
         console.log("Parse Items too: open MyItemView...")
-        this.render();
+        const container = this.contentEl;
+        container.empty();
+        container.createEl('h4', { text: 'Example view' });
+        //this.render();
     }
 
     async onClose()
