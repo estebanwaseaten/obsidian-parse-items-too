@@ -59,18 +59,33 @@ function hasCssClass(frontMatter: any, cssClass: string): boolean
 function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 {
     //only extract entries that have at least the name entry
+    let name: String = "";
     if( typeof frontmatter["dndata-name"] != "string" )
     {
-        return null;
+        if( Array.isArray(frontmatter?.["aliases"]) )
+        {
+            name = frontmatter["aliases"][0];
+            console.log("extract..." + frontmatter["aliases"][0] );
+        }
+        else
+        {
+            return null;
+        }
+    }
+    else
+    {
+        name = frontmatter["dndata-name"];
+        console.log("extract..." );
     }
 
-    console.log("extract..." + frontmatter["aliases"][0] );
+
+
 
     //parse detail better...
 
     //must return item
     return {
-            name: frontmatter["dndata-name"],
+            name: name,
             link: frontmatter["dndata-link"],
             detail: frontmatter["dndata-detail"],
             imagePath: frontmatter["dndata-image"],
