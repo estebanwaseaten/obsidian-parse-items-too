@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, Events } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Events, TFile } from 'obsidian';
 
 import { ParseItemsToo } from "./main"
 import { MyItem } from "./item";
@@ -60,7 +60,12 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 {
     //only extract entries that have at least the name entry
     let name: String = "";
-    if( typeof frontmatter["dndata-name"] != "string" )
+    if( typeof frontmatter["dndata-name"] === "string" )
+    {
+        name = frontmatter["dndata-name"];
+        console.log("extract..." );
+    }
+    else
     {
         if( Array.isArray(frontmatter?.["aliases"]) )
         {
@@ -72,11 +77,9 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
             return null;
         }
     }
-    else
-    {
-        name = frontmatter["dndata-name"];
-        console.log("extract..." );
-    }
+
+    const sourcePath = view?.file?.path ?? "";
+    const link = this.app.fileManager.generateMarkdownLink( file, sourcePath );
 
 
 
@@ -86,7 +89,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     //must return item
     return {
             name: name,
-            link: frontmatter["dndata-link"],
+            link: link,
             detail: frontmatter["dndata-detail"],
             imagePath: frontmatter["dndata-image"],
             cost: frontmatter["dndata-cost"],
