@@ -26,7 +26,7 @@ If your plugin does not need CSS, delete this file.
     max-height: 100px;
     overflow: hidden;
     border-radius: 3px;
-    background-color: #FFFFFF;
+
 }
 
 .parse-items-too-editor-imgblock img{
@@ -35,6 +35,7 @@ If your plugin does not need CSS, delete this file.
   object-fit: contain;        /* no distortion, full image visible */
   object-position: center;    /* center it */
   display: block;
+  background-color: #FFFFFF;
 }
 
 .parse-items-too-editor-item-name{

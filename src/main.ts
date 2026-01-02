@@ -173,7 +173,7 @@ export default class ParseItemsToo extends Plugin {
 
 			await nextFrame();
 			await nextFrame();
-			return;
+		//	return;
 		}
 		const editor = mv.editor;
 

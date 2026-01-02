@@ -143,7 +143,7 @@ export class MyItemView extends ItemView
             textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
             textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
 
-        if( i.imagePath != "" )
+        if( i.imagePath !== "" )
         {
             imgblock.createEl( "img", { attr: {src: i.imagePath, alt: i.name} } );
         }
