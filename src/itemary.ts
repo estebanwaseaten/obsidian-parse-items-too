@@ -9,7 +9,7 @@ export class Itemary extends Events
 
     constructor()
     {
-
+        super(this);
     }
 
     build( plugin: ParseItemsToo )
@@ -28,7 +28,7 @@ export class Itemary extends Events
         {
             console.debug( item.name + ": " + item.detail );
         }
-        
+
         this.trigger("changed"); //notifies all listeners
     }
 
