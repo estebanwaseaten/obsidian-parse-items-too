@@ -28,6 +28,14 @@ table {
     font-size: 12px;
 }
 
-.my-items-table{
+.my-item-view{
     border: 1px, black;
+}
+
+.search-bar{
+
+}
+
+.search-results{
+    
 }

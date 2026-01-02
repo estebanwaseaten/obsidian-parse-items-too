@@ -20,11 +20,14 @@ export class MyItemView extends ItemView
 
     async onOpen()
     {
-        this.contentEl.empty();
-        const search = new SearchComponent( this.contentEl.createDiv("item-view-search") )
+        const root = this.contentEl;
+        root.empty();
+        root.addClass( "my-item-view" );
+
+        const search = new SearchComponent( root.createDiv("search-bar") )
         search.setPlaceholder("search for items...");
 
-        const container = this.contentEl.createDiv({ cls: "item-search" });
+        const container = root.createDiv({ cls: "search-results" });
 
         const render = (q: string) => {
             //search:
