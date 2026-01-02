@@ -79,14 +79,14 @@ export default class ParseItemsToo extends Plugin {
 		else
 		{
 			leaf = this.app.workspace.getRightLeaf(true);
-			await leaf.setViewState({type: ITEM_VIEW});
+			await leaf.setViewState({ type: ITEM_VIEW, active: true });
 		}
 
 		this.app.workspace.revealLeaf( leaf );
 
 		new Notice('You clicked the sword!' + this.settings.mySetting );
 
-        return leaf.view as MyItemView;
+        //return leaf.view as MyItemView;
 	}
 }
 

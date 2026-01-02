@@ -12,13 +12,18 @@ export class MyItemView extends ItemView
         this.load();    //??
     }
 
-    onLoad()
+    async onOpen()
     {
-        console.log("Parse Items too: loading MyItemView...")
+        console.log("Parse Items too: open MyItemView...")
         this.render();
     }
 
-    async render()
+    async onClose()
+    {
+        console.log("Parse Items too: close MyItemView...")
+    }
+
+    render()    //called by me...
     {
         console.log("Parse Items too: render() MyItemView...")
         this.statblockEl.createEl("em", { text: "Rendering Item..."  });
