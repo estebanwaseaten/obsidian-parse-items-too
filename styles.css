@@ -15,7 +15,7 @@ If your plugin does not need CSS, delete this file.
     padding: 4px;
     margin: 5px;
     display: flex;
-    align-items: center;
+    #align-items: center;
     #justify-content: center;
 }
 
