@@ -17,13 +17,13 @@ If your plugin does not need CSS, delete this file.
 }
 
 .parse-items-too-editor-textblock{
-    flex: 1;
 
 }
 
 .parse-items-too-editor-imgblock{
-    flex: 1;
     width: 100px;
+    max-height: 100px;
+    overflow: hidden; 
     background-color: #FF0000;
 }
 
