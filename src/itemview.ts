@@ -57,14 +57,17 @@ export class MyItemView extends ItemView
                     td.createDiv( { text: i.name, cls: "item-name" } );
                     td.createDiv( { text: i.detail, cls: "item-detail" } );
 
-                tr.createEl( "td", { text: "a", cls: "item-cell-button" } );
-                tr.createEl( "td", { text: "b", cls: "item-cell-button" } );
+                const insert = tr.createEl( "td", { text: "insert", cls: "item-cell-button" } );
+                const go = tr.createEl( "td", { text: "go", cls: "item-cell-button" } );
 
-                tr.addEventListener( "click", () => this.clickItem( i ));
-                tr.addEventListener( "contextmenu", () => this.clickItem( i ));
-                tr.addEventListener( "keydown", (ev) => {
+                td.addEventListener( "click", () => this.clickItem( i ));
+                td.addEventListener( "contextmenu", () => this.clickItem( i ));
+                td.addEventListener( "keydown", (ev) => {
                                     if (ev.key === "Enter") this.clickItem(i);
                                 });
+
+                insert.addEventListener( "click", () => { console.log("insert..."); });
+                go.addEventListener( "click", () => { console.log("go..."); });
             }
         };
 
