@@ -162,27 +162,15 @@ export default class ParseItemsToo extends Plugin {
 	      return;
 	    }
 
-	    // Re-focus the editor so the caret is visible
-	    this.app.workspace.setActiveLeaf(mv.leaf, { focus: true });
-		const view = app.workspace.getActiveViewOfType( MarkdownView );
-		// 3) Switch to Reading mode explicitly
-		try
+		if( mv.getMode?.() === "preview" )
 		{
-			if( view.getMode?.() !== "source" )
-			{
-				await view.setMode?.("source");
-			}
-		} catch {
-			// Fallback (older APIs): toggle only if currently in source
-			if( view.getMode?.() === "preview" )
-			{
-				await this.app.commands.executeCommandById("markdown:toggle-source");
-			}
+			mv.setMode?.("source");
+			await nextFrame();
+			await nextFrame();
 		}
 
-
-	    const editor = mv.editor;
-	    editor.replaceSelection( text ); // inserts at cursor if no selection
+		mv.editor?.focus();
+	    mv.editor?.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
 
