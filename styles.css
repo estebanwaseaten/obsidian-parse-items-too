@@ -15,8 +15,8 @@ If your plugin does not need CSS, delete this file.
     padding: 4px;
     margin: 5px;
     display: flex;
-    #align-items: center;
-    justify-content: center;
+    #align-items: center; /* messes up the image scaling*/
+    #justify-content: center;
 }
 
 .parse-items-too-editor-textblock{
@@ -28,7 +28,7 @@ If your plugin does not need CSS, delete this file.
     max-height: 100px;
     overflow: hidden;
     border-radius: 3px;
-
+    padding: 2px;
 }
 
 .parse-items-too-editor-imgblock img{
