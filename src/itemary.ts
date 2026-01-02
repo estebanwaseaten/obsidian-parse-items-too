@@ -82,7 +82,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     const sourcePath = file.path;
     const link = this.app.fileManager.generateMarkdownLink( file, sourcePath, "", name );
 
-    console.log( "debug: " + sourcePath + "; " + link );
+    //console.log( "debug: " + sourcePath + "; " + link );
 
 
     //parse detail better...
