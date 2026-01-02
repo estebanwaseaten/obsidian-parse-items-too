@@ -21,7 +21,8 @@ export class Itemary extends Events
             if( !frontMatter ) continue;
             if( !hasCssClass( frontMatter, "json5e-item" ) ) continue;
 
-            this.#items.push( extractItemsFromFrontmatter( file, frontMatter ) )
+            this.#items.push( extractItemsFromFrontmatter( file, frontMatter ) );
+            this.#items = this.#items.filter(x => x != null);
         }
 
         for( const item of this.#items )
@@ -61,6 +62,10 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     //console.log("extract..." + frontmatter["dndata-name"] );
 
     //parse detail better...
+    if( typeof frontmatter["dndata-name"] != "string" )
+    {
+        return null;
+    }
 
     //must return item
     return {
