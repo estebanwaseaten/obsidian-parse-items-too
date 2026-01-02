@@ -26,7 +26,7 @@ export class MyItemView extends ItemView
     render()    //called by me...
     {
         console.log("Parse Items too: render() MyItemView...")
-        this.statblockEl.createEl("em", { text: "Rendering Item..."  });
+        this.createEl("em", { text: "Rendering Item..."  });
     }
 
     getDisplayText(): string {
