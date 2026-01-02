@@ -1,6 +1,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
 import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
-import { ITEM_VIEW, ItemView } from "./itemview";
+import { ITEM_VIEW, MyItemView } from "./itemview";
 
 
 // Remember to rename these classes and interfaces!
