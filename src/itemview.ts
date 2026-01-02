@@ -39,7 +39,7 @@ export class MyItemView extends ItemView
                               .slice( 0, 50 );                              //maximum 50 items shown
 
             //display:
-            const table = container.createEl("table", { cls: "my-items-table" });
+            const table = this.contentEl.createEl("table", { cls: "my-items-table" });
             const thead = table.createEl("thead");
             const tbody = table.createEl("tbody");
             const header = thead.createEl("tr");
