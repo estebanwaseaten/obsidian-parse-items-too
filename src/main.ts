@@ -163,17 +163,17 @@ export default class ParseItemsToo extends Plugin {
 			return;
 	    }
 
-		const state = mv.getState();
-		if( state.mode !== "source" )
+		const mode = mv.getState().mode;
+		if( mode !== "source" )
 		{
-			await mv.setState({ ...state, mode: "source" });
+			await this.app.commands.executeCommandById("markdown:toggle-edit-mode");
 			await nextFrame();
 			await nextFrame();
 		}
 		const editor = mv.editor;
 
 		editor.focus();
-		editor.setCursor(0);
+		//editor.setCursor(0);
 	    editor.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
