@@ -142,7 +142,7 @@ export class MyItemView extends ItemView
 
         const fullHtml = root.innerHTML;
 
-        console.log("insert box: " + fullHtml);
+        //console.log("insert box: " + fullHtml);
 
         this.plugin.insertIntoEditor( fullHtml );
     }

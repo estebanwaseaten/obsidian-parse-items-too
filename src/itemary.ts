@@ -110,7 +110,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     }
 
 
-    let infoarray: String[] = [];
+    let infoarray: string[] = [];
     //infotext
     if( frontmatter["dndata-damage"] )  //assume weapon:
     {
@@ -133,7 +133,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         {
             infostring += infoarray[index] + ", ";
         }
-        infostring += infoarray.pop() * ")";
+        infostring += ( infoarray.pop() ?? "" ) + ")";
     }
 
     //must return item
