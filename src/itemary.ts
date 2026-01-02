@@ -58,40 +58,43 @@ function hasCssClass(frontMatter: any, cssClass: string): boolean
 
 function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
 {
-    //only extract entries that have at least the name entry
+    //try to get the item name from dndata-name, aliases or filename
     let name: String = "";
     if( typeof frontmatter["dndata-name"] === "string" )
     {
         name = frontmatter["dndata-name"];
         console.log("extract..." );
     }
-    else
+    else if( Array.isArray(frontmatter?.["aliases"]) )
     {
-        if( Array.isArray(frontmatter?.["aliases"]) )
-        {
-            name = frontmatter["aliases"][0];
-            console.log("extract..." + frontmatter["aliases"][0] );
-        }
-        else
-        {
-            return null;
-        }
+        name = frontmatter["aliases"][0];
+        console.log("extract..." + frontmatter["aliases"][0] );
+    }
+    else //maybe add a setting to skip (i.e. return null)
+    {
+        name = file.basename;
     }
 
-    //const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+    //extract link to file
     const sourcePath = file.path;
     const link = this.app.fileManager.generateMarkdownLink( file, sourcePath, "", name );
 
-    //console.log( "debug: " + sourcePath + "; " + link );
-
-
-    //parse detail better...
+    //parse detail
+    //remove links:
+    let detailstring = frontmatter["dndata-detail"]
+                            // remove " ([text](url))"
+                            ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")
+                            // fix spaces before commas
+                            .replace(/\s+,/g, ",")
+                            // collapse double spaces and trim
+                            .replace(/\s{2,}/g, " ")
+                            .trim();
 
     //must return item
     return {
             name: name,
             link: link,
-            detail: frontmatter["dndata-detail"],
+            detail: detailstring,
             imagePath: frontmatter["dndata-image"],
             cost: frontmatter["dndata-cost"],
             weight: frontmatter["dndata-weight"],
