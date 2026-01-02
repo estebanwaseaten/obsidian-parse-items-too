@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, Events, TFile } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, Events, TFile, parseLinktext } from 'obsidian';
 
 import { ParseItemsToo } from "./main"
 import { MyItem } from "./item";
