@@ -12,6 +12,8 @@ export default class ParseItemsToo extends Plugin {
 		console.log("loading Parse Items too...");
 		await this.loadSettings();
 
+
+
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('sword', 'Items', async (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
@@ -43,8 +45,9 @@ export default class ParseItemsToo extends Plugin {
 		//});
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		//this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 
+		this.registerView( ITEM_VIEW, ( leaf: WorkspaceLeaf ) => new MyItemView( leaf, this ) );
 	}
 
 	onunload() {
