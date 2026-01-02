@@ -1,5 +1,7 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab} from "./settings";
+import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
+import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
+import { ITEM_VIEW, ItemView } from "./itemview";
+
 
 // Remember to rename these classes and interfaces!
 
@@ -11,7 +13,7 @@ export default class ParseItemsToo extends Plugin {
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('sword', 'Items', (evt: MouseEvent) => {
+		this.addRibbonIcon('sword', 'Items', async (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
 			this.openItemsPane();
 		});
@@ -57,8 +59,11 @@ export default class ParseItemsToo extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	openItemsPane()
+	async openItemsPane()
 	{
+		let 	leaf: WorkspaceLeaf;
+		const   alreadyThere = this.app.workspace.getLeavesOfType(ITEM_VIEW);
+
 		new Notice('You clicked the sword!' + this.settings.mySetting );
 	}
 }
