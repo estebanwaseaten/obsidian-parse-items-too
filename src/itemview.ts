@@ -144,7 +144,7 @@ export class MyItemView extends ItemView
 
         if( i.imagePath )
         {
-            imgblock.createEl( "img", [], {src: i.imagePath, alt: i.name});
+            imgblock.createEl( "img", { attr: {src: i.imagePath, alt: i.name} } );
         }
 
         const fullHtml = root.innerHTML;
