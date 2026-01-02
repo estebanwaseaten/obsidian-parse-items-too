@@ -19,7 +19,7 @@ export class Itemary
         {
             const frontMatter = plugin.app.metadataCache.getFileCache( file )?.frontmatter;
             if( !frontMatter ) continue;
-            this.#items.push( extractItemsFromFile( file, frontMatter ) )
+            this.#items.push( this.extractItemsFromFile( file, frontMatter ) )
         }
     }
 
