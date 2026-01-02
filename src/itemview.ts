@@ -100,8 +100,8 @@ export class MyItemView extends ItemView
 
         const container = root.createDiv({ cls: "search-results" });
 
-        search.onChange( render );
-        render("");
+        search.onChange( this.render );
+        this.render("");
     }
 
     clickItem( i: MyItem )
