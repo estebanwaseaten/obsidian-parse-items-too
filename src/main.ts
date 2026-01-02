@@ -109,22 +109,35 @@ export default class ParseItemsToo extends Plugin {
         //return leaf.view as MyItemView;
 	}
 
-	openInEditor(linktext: string)
+	async openInEditor(linktext: string)
 	{
-		const mv = this.app.workspace.getActiveViewOfType( MarkdownView )
-			  ?? (this.lastMdLeaf?.view as MarkdownView | undefined);
-		if (!mv)
-		{
-			//open editor?!
-		}
 		let inner = linktext.trim();
 		if (inner.startsWith("!")) inner = inner.slice(1);
 		if (inner.startsWith("[[") && inner.endsWith("]]")) inner = inner.slice(2, -2);
 		const link = inner.split("|")[0].trim(); // e.g., "Note Name#Heading"
 
 		//openFile(file: TFile, openState?: OpenViewState): Promise<void>;
-		this.app.workspace.openLinkText( link, "", false );
+		await this.app.workspace.openLinkText( link, "", false );
 
+		const view = app.workspace.getActiveViewOfType(MarkdownView);
+		if (!view) return;
+
+		// 3) Switch to Reading mode explicitly
+		try
+		{
+			if( view.getMode?.() !== "preview" )
+			{
+				await view.setMode?.("preview");
+			}
+		} catch {
+			// Fallback (older APIs): toggle only if currently in source
+			if( view.getMode?.() === "source" )
+			{
+				await this.app.commands.executeCommandById("markdown:toggle-preview");
+			}
+		}
+
+		//close properties - should wait for layout ready
 		const currentLeaf = document.querySelector('.workspace-leaf.mod-active') //extracts html stuffs
 		if (currentLeaf)
 		{
