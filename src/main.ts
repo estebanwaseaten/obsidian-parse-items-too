@@ -167,10 +167,12 @@ export default class ParseItemsToo extends Plugin {
 		if( state.mode !== "source" )
 		{
 			await mv.setState({ ...state, mode: "source" });
+			await nextFrame();
+			await nextFrame();
 		}
 		const editor = mv.editor;
 
-		editor.focus();
+		//editor.focus();
 	    editor.replaceSelection( text ); // inserts at cursor if no selection
 	}
 }
