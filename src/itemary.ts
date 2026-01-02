@@ -87,7 +87,8 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     if( frontmatter["dndata-image"] )
     {
         const match = frontmatter["dndata-image"].match(/!\[[^\]]*]\(([^)]+)\)/);
-        const { path: linkpath } = parseLinktext( match );
+        const raw = match?.[1] ?? "";   //set raw to match[1] if exists, else ""
+        const { path: linkpath } = parseLinktext( raw );
         //const dest = this.app.metadataCache.getFirstLinkpathDest( frontmatter["dndata-image"], "" );
         //const sourcePath = this.app.workspace.getActiveFile()?.path ?? "";
         //imagepath = frontmatter["dndata-image"].match(/\!\[\]\([^)]+\)/g);
