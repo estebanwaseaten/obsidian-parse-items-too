@@ -20,6 +20,7 @@ export class MyItemView extends ItemView
         const search = new SearchComponent(this.contentEl.createDiv("item-view-search"))
 
         this.contentEl.createEl('h4', { text: 'Example view' });
+        this.contentEl.createEl('div', { text: 'a div' });
         //this.render();
     }
 
