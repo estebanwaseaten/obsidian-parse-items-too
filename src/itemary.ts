@@ -118,7 +118,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     }
     if( frontmatter["dndata-damage2"] )  //assume weapon:
     {
-        infoarray.push("Two-handed: " + frontmatter["dndata-damage"]);
+        infoarray.push("Two-handed: " + frontmatter["dndata-damage2"]);
     }
     if( frontmatter["dndata-ac"] ) //assume armor
     {
@@ -126,7 +126,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     }
 
     let infostring: String = "";
-    if( infoarray?.length > 0 )
+    if( infoarray.length > 0 )
     {
         infostring = "(";
         for (let index = 0; index < infoarray.length-1; index++)
