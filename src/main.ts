@@ -64,7 +64,21 @@ export default class ParseItemsToo extends Plugin {
 		let 	leaf: WorkspaceLeaf;
 		const   alreadyThere = this.app.workspace.getLeavesOfType(ITEM_VIEW);
 
+		if ( alreadyThere.length > 0 )
+		{
+			console.log( "itemPane already there" );
+		}
+		else
+		{
+			leaf = this.app.workspace.getRightLeaf(true);
+			await leaf.setViewState({type: ITEM_VIEW});
+		}
+
+		this.app.workspace.revealLeaf( leaf );
+
 		new Notice('You clicked the sword!' + this.settings.mySetting );
+
+        return leaf.view as ItemView;
 	}
 }
 
