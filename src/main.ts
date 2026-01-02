@@ -7,12 +7,13 @@ export default class ParseItemsToo extends Plugin {
 	settings: ParseItemsTooSettings;
 
 	async onload() {
+		console.log("loading Parse Items too...");
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('sword', 'Items', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('You clicked the sword!' + this.settings.mySetting );
+			this.openItemsPane();
 		});
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
@@ -45,6 +46,7 @@ export default class ParseItemsToo extends Plugin {
 	}
 
 	onunload() {
+		console.log("unloading Parse Items too...");
 	}
 
 	async loadSettings() {
@@ -54,7 +56,15 @@ export default class ParseItemsToo extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+
+	openItemsPane()
+	{
+		new Notice('You clicked the sword!' + this.settings.mySetting );
+	}
 }
+
+
+
 
 class SampleModal extends Modal {
 	constructor(app: App) {
