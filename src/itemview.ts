@@ -81,6 +81,10 @@ export class MyItemView extends ItemView
                               .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
                               .slice( 0, 50 );                              //maximum 50 items shown
         }
+        //sort:
+        const dirMul = this.sort.dir === "asc" ? 1 : -1;
+        results.sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul);
+
         //display:
         const container = this.resultsEl;
         container.empty();
@@ -179,23 +183,21 @@ export class MyItemView extends ItemView
                 });
             };
 
-    addSortKey("Name", "name", "heading-glyph");
-    addSortKey("Rarity", "rarity", "star");
-    addSortKey("Path", "path", "documents");
+        addSortKey("Name", "name", "heading-glyph");
+        addSortKey("Rarity", "rarity", "star");
+        addSortKey("Path", "path", "documents");
 
-    m.addSeparator();
+        m.addSeparator();
 
-    m.addItem((item) => {
-      const next = this.sort.dir === "asc" ? "desc" : "asc";
-      const icon = next === "asc" ? "arrow-up" : "arrow-down";
-      const label = next === "asc" ? "Ascending" : "Descending";
-      item.setTitle(`Direction: ${label}`).setIcon(icon).onClick(() => {
-        this.sort.dir = next;
-        this.render(this.lastQuery);
-      });
-    });
-
-
+        m.addItem((item) => {
+                const next = this.sort.dir === "asc" ? "desc" : "asc";
+                const icon = next === "asc" ? "arrow-up" : "arrow-down";
+                const label = next === "asc" ? "Ascending" : "Descending";
+                item.setTitle(`Direction: ${label}`).setIcon(icon).onClick(() => {
+                            this.sort.dir = next;
+                            this.render(this.lastQuery);
+                        });
+                    });
 
         m.showAtMouseEvent(evt);
     }
