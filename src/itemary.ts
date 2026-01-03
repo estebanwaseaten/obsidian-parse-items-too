@@ -170,7 +170,8 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     let variants: string[] = [];
     if( frontmatter["dndata-variants"] )
     {
-        console.log( frontmatter["dndata-variants"] );
+        //console.log( frontmatter["dndata-variants"] );
+        variants = frontmatter["dndata-variants"];
     }
 
     //must return item

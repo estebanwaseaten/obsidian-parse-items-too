@@ -133,6 +133,7 @@ export class MyItemView extends ItemView
     private clickItem( i: MyItem )
     {
         console.log( "clicked on: " + i.name );
+        console.log( "variants: " + i.variants );
     }
 
     private goItem( i: MyItem )
