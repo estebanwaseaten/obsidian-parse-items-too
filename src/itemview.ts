@@ -221,7 +221,7 @@ export class MyItemView extends ItemView
 function compareByKey(a: MyItem, b: MyItem, key: SortKey): number {
     switch( key )
     {
-        case "name": return a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true });
-        case "rarity": a.rarityInt < b.rarityInt ? -1 : 1;//return (a.rarityInt ?? "").localeCompare(b.rarityInt ?? "", undefined, { sensitivity: "base", numeric: true });
+        case "name": return a.name.localeCompare( b.name, undefined, { sensitivity: "base", numeric: true });
+        case "rarity": return a.rarityInt < b.rarityInt ? -1 : 1;//return (a.rarityInt ?? "").localeCompare(b.rarityInt ?? "", undefined, { sensitivity: "base", numeric: true });
     }
 }
