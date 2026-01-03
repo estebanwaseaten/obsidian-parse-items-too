@@ -27,7 +27,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .parse-items-too-search-bar{
-    width: auto;
+    width: 100%;
     border: 1px solid green;
 }
 
