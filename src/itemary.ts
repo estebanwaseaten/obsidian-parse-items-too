@@ -91,7 +91,11 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         const match = frontmatter["dndata-image"].match(/!\[[^\]]*]\(([^)]+)\)/);
         const raw = match?.[1] ?? "";   //set raw to match[1] if exists, else ""
         const { path: linkpath } = parseLinktext( raw );
-        imagepath = linkpath;
+        const file = app.vault.getAbstractFileByPath( linkpath );
+        if (file instanceof TFile)
+        {
+            imagepath = app.vault.getResourcePath(file);
+        }
     }
 
     //![](sources/base2024/book/items/img/wings-of-flying.webp#right)
