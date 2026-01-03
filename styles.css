@@ -14,6 +14,7 @@ If your plugin does not need CSS, delete this file.
 .parse-items-too-item-view{
     border: 1px, black;
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -29,7 +30,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 .parse-items-too-filter{
-    width: 42px;
+    width: 22px;
 }
 
 .parse-items-too-search-results{
