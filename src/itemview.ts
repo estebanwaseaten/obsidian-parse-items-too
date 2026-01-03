@@ -63,10 +63,11 @@ export class MyItemView extends ItemView
 
         if( !q || q === "" )
         {
+            const dirMul = this.sort.dir === "asc" ? 1 : -1;
             results = this.plugin.myItemary.getItems()
                             .slice()    //clone not to modify source??
-                            .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true }))
-                        //    .slice( 0, 200 )
+                            .sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul)
+                            .slice( 0, 200 )
                             .map(i => ({ i, m: null }));
 
             console.log("all");
@@ -78,13 +79,10 @@ export class MyItemView extends ItemView
             results = this.plugin.myItemary.getItems()
                               .map(i => ({ i, m: score(i.name) }))
                               .filter( x => x.m )
-                              .sort( (a, b) => a.m!.score - b.m!.score );    //sort by score
-                            //  .slice( 0, 50 );                              //maximum 50 items shown
+                              .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
+                              .slice( 0, 50 );                              //maximum 50 items shown
         }
         //sort:
-        const dirMul = this.sort.dir === "asc" ? 1 : -1;
-        results.sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul);
-        results.slice( 0, 200 );
 
         //display:
         const container = this.resultsEl;
