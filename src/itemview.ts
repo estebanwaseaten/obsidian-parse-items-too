@@ -28,16 +28,17 @@ export class MyItemView extends ItemView
     {
         const root = this.contentEl;
         root.empty();
-        const itemView = root.addClass( "parse-items-too-item-view" );
-        const header = itemView.createDiv("parse-items-too-header")
+        root.addClass( "parse-items-too-item-view" );
 
-        const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
-        search.setPlaceholder("search for items...");
-        const filter = header.createDiv( { cls: "parse-items-too-filter" } );
-        setIcon(filter,'sort-asc');
-        filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
+        const header = root.createDiv("parse-items-too-header")
+            const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
+            search.setPlaceholder("search for items...");
+            const filter = header.createDiv( { cls: "parse-items-too-filter" } );
+            setIcon(filter,'sort-asc');
+            filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
 
-        this.resultsEl = itemView.createDiv({ cls: "parse-items-too-search-results" });
+
+        this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
 
         search.onChange( (q) => this.render(q) );
         this.render("");

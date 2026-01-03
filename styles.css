@@ -7,19 +7,62 @@ If your plugin does not need CSS, delete this file.
 
 */
 
+/*
+ * Item List Styling
+*/
+
+.parse-items-too-item-view{
+    border: 1px, black;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .parse-items-too-header{
+    flex: 0 0 auto;
     width: 100%;
     display: flex;
 }
 
 .parse-items-too-search-bar{
-    flex: 1 1 auto;
 }
 
 .parse-items-too-filter{
-    flex: 0 0 auto;
-    
 }
+
+.parse-items-too-search-results{
+    flex: 1 1 auto;     /* take remaining space */
+    min-height: 0;      /* allow shrinking so it can scroll */
+    overflow: auto;     /* or overflow-y: auto; */
+}
+
+.parse-items-too-items-table {
+    width: 100%;
+}
+
+.parse-items-too-item-name{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.parse-items-too-item-detail{
+    font-size: 12px;
+}
+
+.parse-items-too-item-cell-button{
+    text-align: center;
+}
+
+.parse-items-too-items-table tr:nth-child(odd) td{
+    background-color: #EEEEEE;
+}
+.parse-items-too-items-table tr:nth-child(even) td{
+    background-color: #FFFFFF;
+}
+
+/*
+ * Editor Styling
+*/
 
 .parse-items-too-editor-item-box{
     width: 100%;
@@ -66,42 +109,4 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-editor-item-text{
 
-}
-
-.parse-items-too-items-table tr:nth-child(odd) td{
-    background-color: #EEEEEE;
-}
-.parse-items-too-items-table tr:nth-child(even) td{
-    background-color: #FFFFFF;
-}
-
-.parse-items-too-items-table {
-    width: 100%;
-}
-
-.parse-items-too-item-name{
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.parse-items-too-item-detail{
-    font-size: 12px;
-}
-
-.parse-items-too-item-cell-button{
-    text-align: center;
-}
-
-.parse-items-too-item-view{
-    border: 1px, black;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
-.parse-items-too-my-item-view .parse-items-too-search-results{
-    min-height: 0;
-    overflow: auto; /* or overflow-y: auto; */
 }
