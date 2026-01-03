@@ -98,7 +98,8 @@ If your plugin does not need CSS, delete this file.
     overflow: hidden;
     border-radius: 3px;
     padding: 2px;
-    background-color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.4);
+    /*background-color: #FFFFFF;*/
 }
 
 .parse-items-too-editor-imgbgblock img{
