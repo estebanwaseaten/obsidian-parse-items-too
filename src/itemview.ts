@@ -217,3 +217,12 @@ export class MyItemView extends ItemView
         return ITEM_VIEW;
     }
 }
+
+// Helper
+function compareByKey(a: MyItem, b: MyItem, key: SortKey): number {
+  switch (key) {
+    case "name": return a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true });
+    case "rarity": return (a.rarity ?? "").localeCompare(b.rarity ?? "", undefined, { sensitivity: "base", numeric: true });
+    case "path": return (a.filePath ?? "").localeCompare(b.filePath ?? "", undefined, { sensitivity: "base", numeric: true });
+  }
+}
