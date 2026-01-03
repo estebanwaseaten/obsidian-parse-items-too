@@ -23,14 +23,17 @@ If your plugin does not need CSS, delete this file.
     flex: 0 0 auto;
     width: 100%;
     display: flex;
+    border: 1px solid red;
 }
 
 .parse-items-too-search-bar{
     width: auto;
+    border: 1px solid green;
 }
 
 .parse-items-too-filter{
     width: 22px;
+    border: 1px solid blue;
 }
 
 .parse-items-too-search-results{
