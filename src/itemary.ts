@@ -106,6 +106,7 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
     let detailstring: string = "";
     let cost: string = "";
     let rarity: string = "";
+    let rarityInt = 0;
     if( frontmatter["dndata-detail"] )
     {
         detailstring = frontmatter["dndata-detail"]
@@ -118,12 +119,12 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
                                 .trim();
 
         let detailstring_lower = detailstring.toLowerCase()
-        if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact" }
-        else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary" }
-        else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare" }
-        else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare" }
-        else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon" }
-        else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common" }
+        if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact"; rarityInt = 5; }
+        else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary"; rarityInt = 4; }
+        else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare"; rarityInt = 3; }
+        else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare"; rarityInt = 2; }
+        else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon"; rarityInt = 1; }
+        else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common"; rarityInt = 0; }
     }
 
     if( frontmatter["dndata-cost"] )
@@ -181,5 +182,6 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
             ac: frontmatter["dndata-ac"],
             range: frontmatter["dndata-range"],
             rarity: rarity,
+            rarityInt: rarityInt,
         };
 }

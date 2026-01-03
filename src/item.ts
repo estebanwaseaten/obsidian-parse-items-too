@@ -15,6 +15,7 @@ export interface MyItem
     ac: string | number;
     range: string | number;
     rarity: string;
+    rarityInt: number;
 }
 
 

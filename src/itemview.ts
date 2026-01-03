@@ -5,7 +5,7 @@ import { Item, ItemSuggestionModal } from "./item";
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
 
-type SortKey = "name" | "rarity" | "path";
+type SortKey = "name" | "rarity";
 type SortDir = "asc" | "desc";
 
 export class MyItemView extends ItemView
@@ -185,7 +185,6 @@ export class MyItemView extends ItemView
 
         addSortKey("Name", "name", "heading-glyph");
         addSortKey("Rarity", "rarity", "star");
-        addSortKey("Path", "path", "documents");
 
         m.addSeparator();
 
@@ -222,7 +221,6 @@ export class MyItemView extends ItemView
 function compareByKey(a: MyItem, b: MyItem, key: SortKey): number {
   switch (key) {
     case "name": return a.name.localeCompare(b.name, undefined, { sensitivity: "base", numeric: true });
-    case "rarity": return (a.rarity ?? "").localeCompare(b.rarity ?? "", undefined, { sensitivity: "base", numeric: true });
-    case "path": return (a.filePath ?? "").localeCompare(b.filePath ?? "", undefined, { sensitivity: "base", numeric: true });
+    case "rarity": return (a.rarityInt ?? "").localeCompare(b.rarityInt ?? "", undefined, { sensitivity: "base", numeric: true });
   }
 }
