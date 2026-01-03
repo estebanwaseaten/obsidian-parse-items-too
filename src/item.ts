@@ -16,6 +16,7 @@ export interface MyItem
     range: string | number;
     rarity: string;
     rarityInt: number;
+    variants: string[];
 }
 
 

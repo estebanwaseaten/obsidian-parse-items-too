@@ -167,6 +167,12 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
         infostring += ( infoarray.pop() ?? "" ) + ")";
     }
 
+    let variants: string[] = [];
+    if( frontmatter["dndata-variants"] )
+    {
+        console.log( frontmatter["dndata-variants"] );
+    }
+
     //must return item
     return {
             name: name,
@@ -183,5 +189,6 @@ function extractItemsFromFrontmatter( file: TFile, frontmatter: any ): MyItem
             range: frontmatter["dndata-range"],
             rarity: rarity,
             rarityInt: rarityInt,
+            variants: variants,
         };
 }
