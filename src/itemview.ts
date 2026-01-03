@@ -1,4 +1,4 @@
-import { MarkdownView, ItemView, WorkspaceLeaf, SearchComponent, prepareFuzzySearch, setIcon, Menu } from "obsidian";
+import { MarkdownView, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon } from "obsidian";
 import { ParseItemsToo } from "./main"
 import { Itemary } from "./itemary"
 import { Item, ItemSuggestionModal } from "./item";
@@ -15,6 +15,29 @@ export class MyItemView extends ItemView
     {
         super(leaf);
         console.log("Parse Items too: constructing MyItemView...")
+    }
+
+    async onOpen()
+    {
+        const root = this.contentEl;
+        root.empty();
+        root.addClass( "parse-items-too-item-view" );
+        const header = root.createDiv("parse-items-too-header")
+
+        const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
+        search.setPlaceholder("search for items...");
+        const filter = header.createDiv( { cls: "parse-items-too-filter" } );
+        setIcon(filter,'sort-asc');
+        filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
+
+        this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
+
+        search.onChange( (q) => this.render(q) );
+        this.render("");
+
+        const handler = () => this.render();
+        // Auto-cleaned when the view unloads:
+        this.registerEvent(this.plugin.myItemary.on("changed", handler));
     }
 
     private requestRender = (() => {
@@ -94,28 +117,7 @@ export class MyItemView extends ItemView
         }
     };
 
-    async onOpen()
-    {
-        const root = this.contentEl;
-        root.empty();
-        root.addClass( "parse-items-too-item-view" );
-        const header = root.createDiv("parse-items-too-header")
 
-        const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
-        search.setPlaceholder("search for items...");
-        const filter = header.createDiv( { cls: "parse-items-too-filter" } );
-        setIcon(filter,'sort-asc');
-        filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
-
-        this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
-
-        search.onChange( (q) => this.render(q) );
-        this.render("");
-
-        const handler = () => this.render();
-        // Auto-cleaned when the view unloads:
-        this.registerEvent(this.plugin.myItemary.on("changed", handler));
-    }
 
     private clickItem( i: MyItem )
     {
