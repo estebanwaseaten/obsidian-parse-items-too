@@ -23,7 +23,7 @@ export default class ParseItemsToo extends Plugin {
 
 
 		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('sword', 'Items', async (evt: MouseEvent) => {
+		this.addRibbonIcon('sword', 'D&D Items', async (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
 			this.openItemsPane();
 		});

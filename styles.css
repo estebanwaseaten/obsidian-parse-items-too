@@ -7,6 +7,20 @@ If your plugin does not need CSS, delete this file.
 
 */
 
+.parse-items-too-header{
+    width: 100%;
+    display: flex;
+}
+
+.parse-items-too-search-bar{
+    flex: 1 1 auto;
+}
+
+.parse-items-too-filter{
+    flex: 0 0 auto;
+    
+}
+
 .parse-items-too-editor-item-box{
     width: 100%;
     background-color: #A9C9E0;
@@ -15,8 +29,6 @@ If your plugin does not need CSS, delete this file.
     padding: 4px;
     margin: 5px;
     display: flex;
-    #align-items: center; /* messes up the image scaling*/
-    #justify-content: center;
 }
 
 .parse-items-too-editor-textblock{
@@ -87,9 +99,7 @@ If your plugin does not need CSS, delete this file.
     flex-direction: column;
 }
 
-.parse-items-too-search-bar{
 
-}
 
 .parse-items-too-my-item-view .parse-items-too-search-results{
     min-height: 0;

@@ -99,9 +99,12 @@ export class MyItemView extends ItemView
         const root = this.contentEl;
         root.empty();
         root.addClass( "parse-items-too-item-view" );
+        const header = root.createDiv("parse-items-too-header")
 
-        const search = new SearchComponent( root.createDiv("parse-items-too-search-bar") )
+        const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
         search.setPlaceholder("search for items...");
+        const filter = header.createDiv( { cls: "parse-items-too-filter" } );
+        setIcon(filter,'list-filter');
 
         //const container = root.createDiv({ cls: "search-results" });
         this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
