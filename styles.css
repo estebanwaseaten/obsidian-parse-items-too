@@ -40,7 +40,7 @@ If your plugin does not need CSS, delete this file.
     background-color: #FFFFFF;
 }
 
-.parse-items-too-editor-imgblock img{
+.parse-items-too-editor-imgbgblock img{
   width: 100%;            /* make image fit the 100px column */
   height: 100%;
   object-fit: contain;        /* no distortion, full image visible */
