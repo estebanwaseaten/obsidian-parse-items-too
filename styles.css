@@ -32,9 +32,8 @@ If your plugin does not need CSS, delete this file.
 }
 
 .parse-items-too-editor-imgbgblock{
-    max-height: 100px;
     width: 100px;         /* definite size so the img can size against it */
-    #height: 100px;
+    height: 100px;
     overflow: hidden;
     border-radius: 3px;
     padding: 2px;
