@@ -104,9 +104,9 @@ export class MyItemView extends ItemView
         const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
         search.setPlaceholder("search for items...");
         const filter = header.createDiv( { cls: "parse-items-too-filter" } );
-        setIcon(filter,'list-filter');
+        setIcon(filter,'sort-asc');
+        filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
 
-        //const container = root.createDiv({ cls: "search-results" });
         this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
 
         search.onChange( (q) => this.render(q) );
@@ -155,6 +155,40 @@ export class MyItemView extends ItemView
 
         const fullHtml = root.innerHTML;
         this.plugin.insertIntoEditor( fullHtml );
+    }
+
+    private openSortMenu(evt: MouseEvent)
+    {
+        const m = new Menu( this.plugin );
+
+        const addSortKey = (title: string, key: SortKey, icon: string) => {
+                m.addItem((item) => {
+                     item.setTitle(title).setIcon(icon);
+                     // setChecked is available in recent Obsidian versions
+                     (item as any).setChecked?.(this.sort.key === key);
+                     item.onClick(() => { this.sort.key = key; this.render(this.lastQuery); });
+                });
+            };
+
+    addSortKey("Name", "name", "heading-glyph");
+    addSortKey("Rarity", "rarity", "star");
+    addSortKey("Path", "path", "documents");
+
+    m.addSeparator();
+
+    m.addItem((item) => {
+      const next = this.sort.dir === "asc" ? "desc" : "asc";
+      const icon = next === "asc" ? "arrow-up" : "arrow-down";
+      const label = next === "asc" ? "Ascending" : "Descending";
+      item.setTitle(`Direction: ${label}`).setIcon(icon).onClick(() => {
+        this.sort.dir = next;
+        this.render(this.lastQuery);
+      });
+    });
+
+
+
+        m.showAtMouseEvent(evt);
     }
 
     async onClose()
