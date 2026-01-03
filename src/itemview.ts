@@ -28,8 +28,8 @@ export class MyItemView extends ItemView
     {
         const root = this.contentEl;
         root.empty();
-        root.addClass( "parse-items-too-item-view" );
-        const header = root.createDiv("parse-items-too-header")
+        const itemView = root.addClass( "parse-items-too-item-view" );
+        const header = itemView.createDiv("parse-items-too-header")
 
         const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
         search.setPlaceholder("search for items...");
@@ -37,7 +37,7 @@ export class MyItemView extends ItemView
         setIcon(filter,'sort-asc');
         filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
 
-        this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
+        this.resultsEl = itemView.createDiv({ cls: "parse-items-too-search-results" });
 
         search.onChange( (q) => this.render(q) );
         this.render("");
