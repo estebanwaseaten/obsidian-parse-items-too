@@ -5,11 +5,18 @@ import { Item, ItemSuggestionModal } from "./item";
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
 
+type SortKey = "name" | "rarity" | "path";
+type SortDir = "asc" | "desc";
+
 export class MyItemView extends ItemView
 {
     private unsubscribe?: () => void;
     // Keep a handle to the results container
     private resultsEl!: HTMLElement;
+
+    private lastQuery = "";
+    private sort: { key: SortKey; dir: SortDir } = { key: "name", dir: "asc" };
+
 
     constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
     {
