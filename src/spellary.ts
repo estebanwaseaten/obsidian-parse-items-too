@@ -1,6 +1,6 @@
 import { Events, parseLinktext } from 'obsidian';
 import type { FrontMatterCache, TFile, App } from 'obsidian';
-import { MyVariant, MySpell } from "./spell";
+import { MySpell } from "./spell";
 
 export class Spellary extends Events
 {

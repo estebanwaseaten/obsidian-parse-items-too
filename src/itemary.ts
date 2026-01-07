@@ -11,7 +11,7 @@ export class Itemary extends Events
     constructor( public readonly app: App) { super(); }
 
     build( app: App )
-    {
+    { 
         const files: TFile[] = app.vault.getMarkdownFiles();
         for( const file of files )
         {

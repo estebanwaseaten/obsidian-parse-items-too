@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-parse-items-too",
-	"name": "Adding Item DB to DnD... ",
+	"name": "Parse Items too...",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Create List of items similar to the Bestiary in Fantasy Statblocks.",
+	"description": "Create List of items and spells similar to the Bestiary in Fantasy Statblocks.",
 	"author": "Daniel Wegkamp",
 	"authorUrl": "",
 	"fundingUrl": "",

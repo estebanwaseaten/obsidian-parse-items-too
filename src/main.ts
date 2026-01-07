@@ -1,53 +1,56 @@
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian';
 import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
+
 import { ITEM_VIEW, MyItemView } from "./itemview";
 import { Itemary } from "./itemary"
+import { SPELL_VIEW, MySpellView } from "./spellview";
+import { Spellary } from "./spellary"
 //import { Item } from "./item"
 
 
 // Remember to rename these classes and interfaces!
 
 export default class ParseItemsToo extends Plugin {
+
 	settings: ParseItemsTooSettings;
 	public myItemary!: Itemary;
+	public mySpellary!: Spellary;
 
 	private lastMdLeaf: WorkspaceLeaf | null = null;	//keep track of last leaf, so we can try to insert links or blocks
 
 	async onload() {
+
 		console.debug("loading Parse Items too...");
 		await this.loadSettings();
-
-
 
 		// This creates an icon in the left ribbon.
 		// eslint-disable-next-line obsidianmd/ui/sentence-case
 		this.addRibbonIcon('sword', 'D&D items', (evt: MouseEvent) => {
 			 void this.openItemsPane();
 		});
+        this.addRibbonIcon('scroll', 'D&D spells', (evt: MouseEvent) => {
+			 void this.openSpellsPane();
+		});
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		//const statusBarItemEl = this.addStatusBarItem();
 		//statusBarItemEl.setText('Status bar text');
 
-
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab( new ParseItemsTooSettingsTab( this.app, this ) );
 
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plug
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		//this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-		//	new Notice("Click");
-		//});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		//this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 
 		this.registerView( ITEM_VIEW, ( leaf: WorkspaceLeaf ) => new MyItemView( leaf, this ) );
+        this.registerView( SPELL_VIEW, ( leaf: WorkspaceLeaf ) => new MySpellView( leaf, this ) );
 
 		this.myItemary = new Itemary( this.app );
 		this.app.workspace.onLayoutReady( () => this.myItemary.build( this.app ) );
 
-		//whenever the leaf changes, write to tracker this.lastMdLeaf:
+        this.mySpellary = new Spellary( this.app );
+        this.app.workspace.onLayoutReady( () => this.mySpellary.build( this.app ) );
+
+
+		//whenever the lea f changes, write to tracker this.lastMdLeaf:
 		this.registerEvent(
       		this.app.workspace.on("active-leaf-change", (leaf) => {
         		const mv = this.app.workspace.getActiveViewOfType( MarkdownView );
@@ -89,9 +92,28 @@ export default class ParseItemsToo extends Plugin {
 			leaf = workspace.getRightLeaf(false);
 			await leaf.setViewState({ type: ITEM_VIEW, active: true });
 		}
-
 		await workspace.revealLeaf( leaf );
 	}
+
+    async openSpellsPane()
+    {
+        const { workspace } = this.app;
+
+        let 	leaf: WorkspaceLeaf | null = null;
+        let   	presentLeaf = workspace.getLeavesOfType( SPELL_VIEW ).first();
+
+        if( presentLeaf && presentLeaf.view instanceof MySpellView )
+        {
+            console.debug( "spellPane already there" );
+            leaf = presentLeaf;
+        }
+        else
+        {
+            leaf = workspace.getRightLeaf( false );
+            await leaf.setViewState({ type: SPELL_VIEW, active: true });
+        }
+        await workspace.revealLeaf( leaf );
+    }
 
 	async openInEditor( linktext: string )
 	{
