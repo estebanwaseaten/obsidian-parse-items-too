@@ -1,7 +1,8 @@
-import { MarkdownView, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon } from "obsidian";
-import { ParseItemsToo } from "./main"
-import { Itemary } from "./itemary"
-import { Item, ItemSuggestionModal } from "./item";
+import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon, Notice } from "obsidian";
+import type { MenuItem } from "obsidian";
+import type ParseItemsToo from "./main";     //only for default export
+import { MyVariant, MyItem } from "./item";       //general export
+//import type { MyVariant, MyItem } from "./item";       //general export
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
 
@@ -13,39 +14,48 @@ export class MyItemView extends ItemView
     private unsubscribe?: () => void;
     // Keep a handle to the results container
     private resultsEl!: HTMLElement;
+    private filterEl!: HTMLElement;
 
     private lastQuery = "";
     private sort: { key: SortKey; dir: SortDir } = { key: "name", dir: "asc" };
 
+    private raritymap = {
+            0: 'common',
+            1: 'uncommon',
+            2: 'rare',
+            3: 'very rare',
+            4: 'legendary',
+            5: 'artifact',
+    };
 
-    constructor(leaf: WorkspaceLeaf, public plugin: ParseItemsToo)
+
+    constructor(leaf: WorkspaceLeaf, public readonly plugin: ParseItemsToo)
     {
         super(leaf);
-        console.log("Parse Items too: constructing MyItemView...")
+        console.debug("Parse Items too: MyItemView.constructor() ");
     }
 
     async onOpen()
     {
+        console.debug("Parse Items too: MyItemView.onOpen()");
         const root = this.contentEl;
         root.empty();
         root.addClass( "parse-items-too-item-view" );
 
         const header = root.createDiv("parse-items-too-header")
             const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
-            search.setPlaceholder("search for items...");
-            const filter = header.createDiv( { cls: "parse-items-too-filter" } );
-            setIcon(filter,'sort-asc');
-            filter.addEventListener( "click", (evt) => this.openSortMenu(evt) );
-
+            search.setPlaceholder("Search for items...");
+            this.filterEl = header.createDiv( { cls: "parse-items-too-filter" } );
+            setIcon(this.filterEl,'sort-asc');
+            this.filterEl.addEventListener( "click", (evt) => this.openSortMenu(evt) );
 
         this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
 
         search.onChange( (q) => this.render(q) );
-        this.render("");
 
-        const handler = () => this.render();
         // Auto-cleaned when the view unloads:
-        this.registerEvent(this.plugin.myItemary.on("changed", handler));
+        const ref: EventRef = this.plugin.myItemary.on( "changed", () => this.render() );
+        this.registerEvent(ref); // OK: ref is EventRef
     }
 
     private requestRender = (() => {
@@ -59,33 +69,47 @@ export class MyItemView extends ItemView
 
     public render = (q: string) =>  //arrow function
     {
+
         //search:
+
         let results: MyItem[];
 
         if( !q || q === "" )
         {
+            //console.debug("Parse Items too: MyItemView.render()");
             const dirMul = this.sort.dir === "asc" ? 1 : -1;
             results = this.plugin.myItemary.getItems()
                             .slice()    //clone not to modify source??
                             .sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul)
-                            .slice( 0, 200 )
-                            .map(i => ({ i, m: null }));
+                            .slice( 0, 200 );
+                            //.map(i => ({ i, m: null }));
 
-            console.log("all");
+            //console.debug("all");
         }
         else
         {
-            console.log("subset");
+            //console.debug("Parse Items too: MyItemView.render("+q+")");
+            //console.debug("subset");
             const score = prepareFuzzySearch( q );
             results = this.plugin.myItemary.getItems()
-                              .map(i => ({ i, m: score(i.name) }))
+                              .map(i => ({ i, m: score(i.name) }))  //add score to MyItem object
                               .filter( x => x.m )
                               .sort( (a, b) => a.m!.score - b.m!.score )    //sort by score
-                              .slice( 0, 50 );                              //maximum 50 items shown
+                              .map( x => x.i )                                  //map back to MyItem object
+                              .slice( 0, 50 );                                //maximum 50 items shown
+            //console.debug('after map', results[0]);
+
         }
+        //console.debug("Parse Items too: MyItemView.render() results: " + results[0].name);
+        //results = this.plugin.myItemary.getItems();
         //sort:
 
         //display:
+        if( this.sort.dir === "asc")
+            setIcon(this.filterEl,'sort-asc');
+        else
+            setIcon(this.filterEl,'sort-desc');
+
         const container = this.resultsEl;
         container.empty();
 
@@ -99,10 +123,11 @@ export class MyItemView extends ItemView
         header.createEl( "th", "" );
         header.createEl( "th", "" );
         header.createEl( "th", "" );
+        header.createEl( "th", "" );
 
         tbody.empty();
 
-        for( const { i } of results )
+        for( const i of results )
         {
             const tr = tbody.createEl("tr", { cls: "parse-items-too-items-row", attr: { tabindex: "0" } });
             const td = tr.createEl( "td", { cls: "parse-items-too-tem-cell" } );
@@ -117,59 +142,96 @@ export class MyItemView extends ItemView
             setIcon(go,'external-link');
 
             td.addEventListener( "click", () => this.clickItem( i ));
-            td.addEventListener( "contextmenu", () => this.clickItem( i ));
+            td.addEventListener( "contextmenu", ( evt ) => this.rightclickItem( i, evt ));
             //td.addEventListener( "keydown", (ev) => {
             //                    if (ev.key === "Enter") this.clickItem(i); });
-            insertLink.addEventListener( "click", () => this.insertLink(i));
-            insertBox.addEventListener( "click", () => this.insertBox(i));
-            go.addEventListener( "click", () => this.goItem(i));
+            insertLink.addEventListener( "click", () => this.clickLink( i ));
+            insertLink.addEventListener( "contextmenu", ( evt ) => this.rightclickLink( i, evt ));
 
+            insertBox.addEventListener( "click", () => this.clickBox( i ));
 
+            go.addEventListener( "click", () => this.clickGo( i ));
+            go.addEventListener( "contextmenu", ( evt ) => this.rightclickGo( i, evt ));
         }
     };
 
 
-
     private clickItem( i: MyItem )
     {
-        console.log( "clicked on: " + i.name );
-        console.log( "variants: " + i.variants );
-        new Notice( i.variants );
+        console.debug( "click on: " + i.name );
+        console.debug( "markdown link: " + i.markdownlink )
+        console.debug( "file path: " + i.filePath )
+        if( i.imagePath )
+            console.debug( "image path: " + i.imagePath );
+
+        //console.debug( "variants: " + i.variants );
+        //if( i.variants.length > 0 )
+            //new Notice( i.variants );
     }
 
-    private goItem( i: MyItem )
+    private rightclickItem( i: MyItem, evt: MouseEvent )
     {
-        console.log("go...");
-        this.plugin.openInEditor( i.markdownlink );
+        console.debug( "rightclick on: " + i.name );
     }
 
-    private insertLink( i: MyItem )
+    private clickLink( i: MyItem )
     {
-        console.log("insert link...");
-        this.plugin.insertIntoEditor( i.markdownlink );
+        console.debug("click link...");
+        if( i.variants?.length > 0 )
+            new Notice( "Right click vor variants..." );
+
+        void this.plugin.insertIntoEditor( i.markdownlink );
     }
 
-    private insertBox( i: MyItem )
+    private rightclickLink( i: MyItem, evt: MouseEvent )
     {
+        console.debug("rightclick link...");
+        this.makeVariantMenu( i, evt, (variant) => { void this.plugin.insertIntoEditor( variant.markdownlink ); } );
+    }
 
-        //const root = this.plugin.document.createElement("div");
-        const root = document.createElement("div");
-        const container = root.createDiv({ cls: "parse-items-too-editor-item-box" });
-        const textblock = container.createDiv({ cls: "parse-items-too-editor-textblock" });
-
-            textblock.createDiv( { text: i.name, cls: "parse-items-too-editor-item-name" } );
-            textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
-            //textblock.createDiv( { text: i.detail + " " + i.infotext, cls: "parse-items-too-editor-item-text" } );
-
-        if( i.imagePath !== "" )
+    private makeVariantMenu( i: MyItem, evt: MouseEvent, clickMethod: (variant: MyVariant) => void  )
+    {
+        if( i.variants.length > 0 )
         {
-            const imgblock = container.createDiv({ cls: "parse-items-too-editor-imgblock" });
-            imgblock.createDiv( { cls: "parse-items-too-editor-imgbgblock" } )
-                .createEl( "img", { attr: {src: i.imagePath, alt: i.name} } );
-        }
+            const m = new Menu( this.plugin );
 
-        const fullHtml = root.innerHTML;
-        this.plugin.insertIntoEditor( fullHtml );
+            i.variants.forEach( variant => {
+                m.addItem((item) => {
+                     item.setTitle(variant.name);
+                     item.onClick(() => { clickMethod( variant ); });
+                });
+            });
+
+            m.showAtMouseEvent(evt);
+        }
+    }
+
+    private clickGo( i: MyItem )
+    {
+        console.debug("click go...");
+        if( i.variants?.length > 0 )
+            new Notice( "Right click vor variants..." );
+        void this.plugin.openInEditor( i.markdownlink );
+    }
+
+    private rightclickGo( i: MyItem, evt: MouseEvent )
+    {
+        console.debug("rightclick go...");
+         this.makeVariantMenu( i, evt, (variant) => { void this.plugin.openInEditor( variant.markdownlink ); } );
+    }
+
+
+
+    private clickBox( i: MyItem )
+    {   // cannot use createElement() or createDiv(), because it will throw an error because of the vault relative path in the <img> imgTag
+        // the vault relative path is needed, though, so the paths dont break when synicing the vault to a different computer.
+        // --> html block has to be created as a string:
+        const pre = '<div class="parse-items-too-editor-item-box"><div class="parse-items-too-editor-textblock"><div class="parse-items-too-editor-item-name">' + i.name + '</div><div class="parse-items-too-editor-item-text">' + i.detail + " " + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
+        const post = '</div>';
+        let imgTag: string = '';
+        if( i.imagePath !== "" )
+        { imgTag = '<div class="parse-items-too-editor-imgblock"><div class="parse-items-too-editor-imgbgblock"><img src="' + i.imagePath + '"></div></div>'; }
+        void this.plugin.insertIntoEditor( pre + imgTag + post );
     }
 
     private openSortMenu(evt: MouseEvent)
@@ -177,10 +239,10 @@ export class MyItemView extends ItemView
         const m = new Menu( this.plugin );
 
         const addSortKey = (title: string, key: SortKey, icon: string) => {
-                m.addItem((item) => {
+                m.addItem( (item: MenuItem) => {
                      item.setTitle(title).setIcon(icon);
                      // setChecked is available in recent Obsidian versions
-                     (item as any).setChecked?.(this.sort.key === key);
+                     item.setChecked?.(this.sort.key === key);
                      item.onClick(() => { this.sort.key = key; this.render(this.lastQuery); });
                 });
             };
@@ -205,10 +267,11 @@ export class MyItemView extends ItemView
 
     async onClose()
     {
-        console.log("Parse Items too: close MyItemView...")
+        console.debug("Parse Items too: close MyItemView...")
     }
 
     getDisplayText(): string {
+        // eslint-disable-next-line obsidianmd/ui/sentence-case
         return "D&D Items";
     }
     getIcon(): string {

@@ -1,11 +1,17 @@
-import { App, FuzzySuggestModal, Plugin, TFile } from "obsidian";
+import { App, FuzzySuggestModal } from "obsidian";
+
+export interface MyVariant
+{
+    name: string,
+    markdownlink: string,
+}
 
 export interface MyItem
 {
     name: string;
-    link: string;
     markdownlink: string;
     imagePath: string;
+    filePath: string;
     detail: string;
     infotext: string;
     cost: string | number;
@@ -16,7 +22,7 @@ export interface MyItem
     range: string | number;
     rarity: string;
     rarityInt: number;
-    variants: string[];
+    variants: MyVariant[];
 }
 
 
@@ -39,14 +45,4 @@ export class ItemSuggestionModal extends FuzzySuggestModal<MyItem>
     {
         this.onPick( item );
     }
-
-
-/*    renderNote( noteEL: HTMLElement, result: FuzzyMatch<Monster> ): void {
-        const { item, match } = result;
-        renderMatches(noteEL, stringify(item.source), match.matches);
-    }
-    renderTitle(titleEl: HTMLElement, result: FuzzyMatch<Monster>): void {
-        const { item, match } = result;
-        renderMatches(titleEl, stringify(item.name), match.matches);
-    }*/
 }

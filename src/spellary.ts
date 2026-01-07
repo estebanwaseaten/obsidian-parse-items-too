@@ -1,12 +1,10 @@
 import { Events, parseLinktext } from 'obsidian';
 import type { FrontMatterCache, TFile, App } from 'obsidian';
+import { MyVariant, MySpell } from "./spell";
 
-
-import { MyVariant, MyItem } from "./item";
-
-export class Itemary extends Events
+export class Spellary extends Events
 {
-    #items: MyItem[] = []
+    #spells: MySpell[] = []
 
     constructor( public readonly app: App) { super(); }
 
@@ -17,24 +15,24 @@ export class Itemary extends Events
         {
             const frontMatter = app.metadataCache.getFileCache( file )?.frontmatter;
             if( !frontMatter ) continue;
-            if( !this.hasCssClass( frontMatter, "json5e-item" ) ) continue;
+            if( !this.hasCssClass( frontMatter, "json5e-spell" ) ) continue;
 
-            this.#items.push( this.extractItemsFromFrontmatter( file, frontMatter ) );
-            this.#items = this.#items.filter(x => x != null);
+            this.#spells.push( this.extractSpellsFromFrontmatter( file, frontMatter ) );
+            this.#spells = this.#spells.filter(x => x != null);
         }
 
-        /*for( const item of this.#items )
+        /*for( const spell of this.#spells )
         {
-            console.debug( "item loaded: " + item.name );
+            console.debug( "spell loaded: " + spell.name );
         }*/
 
-        //console.debug( "extracted " + this.#items.length + " items.");
+        //console.debug( "extracted " + this.#spells.length + " spells.");
         this.trigger( "changed" ); //notifies all listeners
     }
 
-    getItems(): readonly MyItem[]
+    getSpells(): readonly MySpell[]
     {
-        return this.#items;
+        return this.#spells;
     }
 
     hasCssClass( frontMatter: FrontMatterCache | null | undefined, cssClass: string ): boolean
@@ -72,7 +70,7 @@ export class Itemary extends Events
                 };
     }
 
-    extractItemsFromFrontmatter( file: TFile, frontmatter: FrontMatterCache | null | undefined ): MyItem
+    extractSpellsFromFrontmatter( file: TFile, frontmatter: FrontMatterCache | null | undefined ): MySpell
     {
         const fm = frontmatter as ( Record<string, unknown> );
 
@@ -164,7 +162,7 @@ export class Itemary extends Events
 
         //console.debug( "extracted: " + name );
 
-        //must return item
+        //must return spell
         return {
                 name: name,
                 markdownlink: markdownlink,

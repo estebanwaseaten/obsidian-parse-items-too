@@ -1,4 +1,5 @@
-import {App, PluginSettingTab, Setting} from "obsidian";
+import {App, PluginSettingTab, Setting } from "obsidian";
+
 import ParseItemsToo from "./main";
 
 export interface ParseItemsTooSettings {
@@ -10,7 +11,7 @@ export const DEFAULT_SETTINGS: ParseItemsTooSettings = {
 }
 
 export class ParseItemsTooSettingsTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: ParseItemsToo;
 
 	constructor(app: App, plugin: ParseItemsToo) {
 		super(app, plugin);
