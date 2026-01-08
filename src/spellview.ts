@@ -6,7 +6,7 @@ import { MySpell } from "./spell";       //general export
 
 export const SPELL_VIEW = "parse-items-too-spell-pane";
 
-type SortKey = "name" | "rarity";
+type SortKey = "name" | "level";
 type SortDir = "asc" | "desc";
 
 export class MySpellView extends ItemView
@@ -18,15 +18,6 @@ export class MySpellView extends ItemView
 
     private lastQuery = "";
     private sort: { key: SortKey; dir: SortDir } = { key: "name", dir: "asc" };
-
-    private raritymap = {
-            0: 'common',
-            1: 'uncommon',
-            2: 'rare',
-            3: 'very rare',
-            4: 'legendary',
-            5: 'artifact',
-    };
 
 
     constructor(leaf: WorkspaceLeaf, public readonly plugin: ParseItemsToo )
@@ -56,6 +47,10 @@ export class MySpellView extends ItemView
         // Auto-cleaned when the view unloads:
         const ref: EventRef = this.plugin.mySpellary.on( "changed", () => this.render() );
         this.registerEvent(ref); // OK: ref is EventRef
+
+        //have to render as soon as Spellary is ready:
+        // - if spellary is not ready yet, it should trigger a render soon
+        if( this.plugin.mySpellary.isReady ) this.render("");
     }
 
     private requestRender = (() => {
@@ -83,8 +78,6 @@ export class MySpellView extends ItemView
                             .sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul)
                             .slice( 0, 200 );
                             //.map(i => ({ i, m: null }));
-
-            //console.debug("all");
         }
         else
         {
@@ -115,29 +108,37 @@ export class MySpellView extends ItemView
 
         if( results.length == 0 ) return;
 
-        const table = container.createEl("table", { cls: "parse-items-too-spells-table" });
+        const table = container.createEl("table", { cls: "parse-items-too-spell-table" });
         const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
         const header = thead.createEl("tr");
         header.createEl( "th", "Name" );
         header.createEl( "th", "" );
         header.createEl( "th", "" );
-        header.createEl( "th", "" );
+        //header.createEl( "th", "" );
         header.createEl( "th", "" );
 
         tbody.empty();
 
         for( const i of results )
         {
+            let  detail: string = "";
+            detail += (i.level === "" ? "" : i.level + ', ');
+            detail += (i.castingtime === "" ? "" : i.castingtime + ', ');
+            detail += (i.components === "" ? "" : i.components + ', ');
+            detail += (i.ritual ? " (ritual)" : "");
+
             const tr = tbody.createEl("tr", { cls: "parse-items-too-spell-row", attr: { tabindex: "0" } });
             const td = tr.createEl( "td", { cls: "parse-items-too-spell-cell" } );
-                td.createDiv( { text: i.name, cls: "parse-items-too-spell-name" } );
-                td.createDiv( { text: i.detail, cls: "parse-items-too-spell-detail" } );
+            const name = td.createDiv( { cls: "parse-items-too-spell" } );
+                td.createDiv( { text: detail, cls: "parse-items-too-spell-detail" } );
+            name.createEl( "span", { text: i.name, cls: "parse-items-too-spell-name" } );
+            if( i.school !== "" ) name.createEl( "span", { text: " (" + i.school + ")", cls: "parse-items-too-spell-detail" } );
 
             const insertLink = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
             setIcon(insertLink,'link');
-            const insertBox = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
-            setIcon(insertBox,'gallery-vertical');
+            //const insertBox = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
+            //setIcon(insertBox,'gallery-vertical');
             const go = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
             setIcon(go,'external-link');
 
@@ -148,7 +149,7 @@ export class MySpellView extends ItemView
             insertLink.addEventListener( "click", () => this.clickLink( i ));
             insertLink.addEventListener( "contextmenu", ( evt ) => this.rightclickLink( i, evt ));
 
-            insertBox.addEventListener( "click", () => this.clickBox( i ));
+            //insertBox.addEventListener( "click", () => this.clickBox( i ));
 
             go.addEventListener( "click", () => this.clickGo( i ));
             go.addEventListener( "contextmenu", ( evt ) => this.rightclickGo( i, evt ));
@@ -239,7 +240,7 @@ export class MySpellView extends ItemView
         const m = new Menu( this.plugin );
 
         const addSortKey = (title: string, key: SortKey, icon: string) => {
-                m.addSpell( (spell: MenuSpell) => {
+                m.addItem( (spell: MenuSpell) => {
                      spell.setTitle(title).setIcon(icon);
                      // setChecked is available in recent Obsidian versions
                      spell.setChecked?.(this.sort.key === key);
@@ -248,11 +249,11 @@ export class MySpellView extends ItemView
             };
 
         addSortKey("Name", "name", "heading-glyph");
-        addSortKey("Rarity", "rarity", "star");
+        addSortKey("Level", "level", "star");
 
         m.addSeparator();
 
-        m.addSpell((spell) => {
+        m.addItem((spell) => {
                 const next = this.sort.dir === "asc" ? "desc" : "asc";
                 const icon = next === "asc" ? "arrow-up" : "arrow-down";
                 const label = next === "asc" ? "Ascending" : "Descending";
@@ -287,6 +288,6 @@ function compareByKey(a: MySpell, b: MySpell, key: SortKey): number {
     switch( key )
     {
         case "name": return a.name.localeCompare( b.name, undefined, { sensitivity: "base", numeric: true });
-        case "rarity": return a.rarityInt < b.rarityInt ? -1 : 1;//return (a.rarityInt ?? "").localeCompare(b.rarityInt ?? "", undefined, { sensitivity: "base", numeric: true });
+        case "level": return a.levelInt < b.levelInt ? -1 : 1;//return (a.rarityInt ?? "").localeCompare(b.rarityInt ?? "", undefined, { sensitivity: "base", numeric: true });
     }
 }

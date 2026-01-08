@@ -5,6 +5,7 @@ import { MySpell } from "./spell";
 export class Spellary extends Events
 {
     #spells: MySpell[] = []
+    isReady: boolean = false;
 
     constructor( public readonly app: App) { super(); }
 
@@ -26,7 +27,8 @@ export class Spellary extends Events
             console.debug( "spell loaded: " + spell.name );
         }*/
 
-        //console.debug( "extracted " + this.#spells.length + " spells.");
+        console.debug( "Extracted " + this.#spells.length + " spells.");
+        this.isReady = true;
         this.trigger( "changed" ); //notifies all listeners
     }
 
@@ -76,12 +78,20 @@ export class Spellary extends Events
 
         let name: string = "";
         let imagepath: string = "";
+
         let detailstring: string = "";
         let infostring: string = "";
-        let cost: string = "";
-        let rarity: string = "";
-        let rarityInt = 0;
-        let variants: MyVariant[] = [];
+        let castingtime: string = "";
+
+        let isritual: boolean = false;
+        let range: string = "";
+        let components: string = "";
+        let duration: string = "";
+        let level: string = "";
+        let school: string = "";
+        let classes: string[] = [];
+        let levelInt: number = 0;
+
         if( fm )
         {
             if( typeof  fm["dndata-name"] === "string" )
@@ -99,61 +109,53 @@ export class Spellary extends Events
                 imagepath = parseLinktext( raw ).path;  //is simple path from vault root
             }
 
-            //parse detail
-            if( typeof fm["dndata-detail"] === "string" )
-            {
-                detailstring = fm["dndata-detail"]
-                                        ?.replace(/\s*\(\[[^\]]*]\([^)]+\)\)/g, "")// remove " ([text](url))"
-                                        .replace(/\s+,/g, ",")// fix spaces before commas
-                                        .replace(/\s{2,}/g, " ")// collapse double spaces and trim
-                                        .trim();
+            if( typeof fm["dndata-castingtime"] === "string" )
+            { castingtime = fm["dndata-castingtime"]; }
 
-                let detailstring_lower = detailstring.toLowerCase()
-                if( detailstring_lower.includes( "artifact" ) ){ cost = "infinite"; rarity = "Artifact"; rarityInt = 5; }
-                else if( detailstring_lower.includes( "legendary" ) ){ cost = "200000 GM (auto)"; rarity = "legendary"; rarityInt = 4; }
-                else if( detailstring_lower.includes( "very rare" ) ){ cost = "40000 GM (auto)"; rarity = "very rare"; rarityInt = 3; }
-                else if( detailstring_lower.includes( "rare" ) ){ cost = "4000 GM (auto)"; rarity = "rare"; rarityInt = 2; }
-                else if( detailstring_lower.includes( "uncommon" ) ){ cost = "400 GM (auto)"; rarity = "uncommon"; rarityInt = 1; }
-                else if( detailstring_lower.includes( "common" ) ){ cost = "100 GM (auto)"; rarity = "common"; rarityInt = 0; }
+            if( typeof fm["dndata-isritual"] === "boolean" )
+            { isritual = fm["dndata-ritual"]; }
+
+            if( typeof fm["dndata-range"] === "string" )
+            { range = fm["dndata-range"]; }
+
+            if( typeof fm["dndata-components"] === "string" )
+            { components = fm["dndata-components"]; }
+
+            if( typeof fm["dndata-duration"] === "string" )
+            { duration = fm["dndata-duration"]; }
+
+            if( typeof fm["dndata-level"] === "string" )
+            {
+                level = fm["dndata-level"];
+                let level_lower = level.toLowerCase();
+                if( level_lower.includes("1st")){levelInt = 1;}
+                else if( level_lower.includes("2nd")){levelInt = 2;}
+                else if( level_lower.includes("3rd")){levelInt = 3;}
+                else if( level_lower.includes("4th")){levelInt = 4;}
+                else if( level_lower.includes("5th")){levelInt = 5;}
+                else if( level_lower.includes("6th")){levelInt = 6;}
+                else if( level_lower.includes("7th")){levelInt = 7;}
+                else if( level_lower.includes("8th")){levelInt = 8;}
+                else if( level_lower.includes("9th")){levelInt = 9;}
             }
 
-            if( typeof fm["dndata-cost"] === "string" )
-            { cost = fm["dndata-cost"]; }
+            if( typeof fm["dndata-school"] === "string" )
+            { school = fm["dndata-school"]; }
 
-
-            let infoarray: string[] = [];
-            if( typeof fm["dndata-damage"] === "string" )  //assume weapon:
-            { infoarray.push("Damage: " + fm["dndata-damage"]); }
-            if( typeof fm["dndata-damage2"] === "string" )  //assume weapon:
-            { infoarray.push("Two-handed: " + fm["dndata-damage2"]); }
-            if( typeof fm["dndata-ac"] === "string" ) //assume armor
-            { infoarray.push("AC: " + fm["dndata-ac"]); }
-            if( cost !== "" ) //assume armor
-            { infoarray.push("cost: " + cost); }
-            if( typeof fm["dndata-weight"] === "string" ) //assume armor
-            { infoarray.push("weight: " + fm["dndata-weight"]); }
-
-
-            if( infoarray.length > 0 )
+            if( Array.isArray( fm["dndata-classes"] ) )
             {
-                infostring = "(";
-                for (let index = 0; index < infoarray.length-1; index++)
+                if( fm["dndata-classes"].length > 0 )
                 {
-                    infostring += infoarray[index] + ", ";
+                    classes = "(";
+                    for (let index = 0; index < fm["dndata-classes"].length-1; index++)
+                    {
+                        classes += fm["dndata-classes"][index] + ", ";
+                    }
+                    classes += ( fm["dndata-classes"].pop() ?? "" ) + ")";
                 }
-                infostring += ( infoarray.pop() ?? "" ) + ")";
-            }
-
-
-            if( Array.isArray( fm["dndata-variants"] ) )
-            {
-                fm["dndata-variants"].forEach( variantName => {
-                    if( typeof variantName === "string" )
-                        variants.push( this.extractVariant( file, variantName ) );
-                });
             }
         }
-        else
+        else   
         { name = file.basename; }
 
         //extract markdown link to this file
@@ -166,19 +168,17 @@ export class Spellary extends Events
         return {
                 name: name,
                 markdownlink: markdownlink,
-                detail: detailstring,
-                infotext: infostring,
                 imagePath: imagepath,
                 filePath: sourcePath,
-                cost: cost,
-                weight: typeof fm["dndata-weight"] === "string" ? fm["dndata-weight"] : "",
-                damage: fm["dndata-damage"],
-                damage2: fm["dndata-damage2"],
-                ac: fm["dndata-ac"],
-                range: fm["dndata-range"],
-                rarity: rarity,
-                rarityInt: rarityInt,
-                variants: variants,
+                castingtime: castingtime,
+                isritual: isritual,
+                range: range,
+                components: components,
+                duration: duration,
+                level: level,
+                levelInt: levelInt,
+                school: school,
+                classes: classes,
             };
     }
 }

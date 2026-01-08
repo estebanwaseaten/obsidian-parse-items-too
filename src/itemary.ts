@@ -7,11 +7,12 @@ import { MyVariant, MyItem } from "./item";
 export class Itemary extends Events
 {
     #items: MyItem[] = []
+    isReady: boolean = false;
 
     constructor( public readonly app: App) { super(); }
 
     build( app: App )
-    { 
+    {
         const files: TFile[] = app.vault.getMarkdownFiles();
         for( const file of files )
         {
@@ -28,7 +29,8 @@ export class Itemary extends Events
             console.debug( "item loaded: " + item.name );
         }*/
 
-        //console.debug( "extracted " + this.#items.length + " items.");
+        console.debug( "Extracted " + this.#items.length + " items.");
+        this.isReady = true;
         this.trigger( "changed" ); //notifies all listeners
     }
 

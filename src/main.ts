@@ -50,7 +50,7 @@ export default class ParseItemsToo extends Plugin {
         this.app.workspace.onLayoutReady( () => this.mySpellary.build( this.app ) );
 
 
-		//whenever the lea f changes, write to tracker this.lastMdLeaf:
+		//whenever the edit leaf changes, write to tracker this.lastMdLeaf:
 		this.registerEvent(
       		this.app.workspace.on("active-leaf-change", (leaf) => {
         		const mv = this.app.workspace.getActiveViewOfType( MarkdownView );
@@ -65,6 +65,10 @@ export default class ParseItemsToo extends Plugin {
 		this.app.workspace
 		   .getLeavesOfType(ITEM_VIEW)
 		   .forEach((leaf) => leaf.detach());
+
+        this.app.workspace
+           .getLeavesOfType(SPELL_VIEW)
+           .forEach((leaf) => leaf.detach());
 	}
 
 	async loadSettings() {

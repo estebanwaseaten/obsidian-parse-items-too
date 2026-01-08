@@ -7,17 +7,12 @@ If your plugin does not need CSS, delete this file.
 
 */
 
-/*
- * Item List Styling
+/*  ###   ###   #   #  #   #   ###   #   #
+ * #     #   #  ## ##  ## ##  #   #  ##  #
+ * #     #   #  # # #  # # #  #   #  # # #
+ * #     #   #  #   #  #   #  #   #  #  ##
+ *  ###   ###   #   #  #   #   ###   #   #
 */
-
-.parse-items-too-item-view{
-    border: 1px, black;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
 
 .parse-items-too-header{
     flex: 0 0 auto;
@@ -54,43 +49,9 @@ If your plugin does not need CSS, delete this file.
     overflow: auto;     /* or overflow-y: auto; */
 }
 
-.parse-items-too-items-table {
-    width: 100%;
-}
-
-.parse-items-too-item-name{
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.parse-items-too-item-detail{
-    font-size: 12px;
-}
-
-.parse-items-too-item-cell-button{
-    text-align: center;
-}
-
-.parse-items-too-items-table tr:nth-child(odd) td{
-    background-color: #EEEEEE;
-}
-.parse-items-too-items-table tr:nth-child(even) td{
-    background-color: #FFFFFF;
-}
-
 /*
- * Editor Styling
-*/
-
-.parse-items-too-editor-item-box{
-    width: 100%;
-    background-color: #A9C9E0;
-    border: 1px solid black;
-    border-radius: 3px;
-    padding: 4px;
-    margin: 5px;
-    display: flex;
-}
+ *      EDITOR STYLING
+ */
 
 .parse-items-too-editor-textblock{
     flex: 1 1 auto;
@@ -122,10 +83,105 @@ If your plugin does not need CSS, delete this file.
   display: block;
 }
 
+/*   #  #####  ####  #   #   ####
+ *   #    #    #     ## ##  #
+ *   #    #    ##    # # #   ###
+ *   #    #    #     #   #      #
+ *   #    #    ####  #   #  ####
+ */
+
+.parse-items-too-item-view{
+    /*border: 1px solid black;*/
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.parse-items-too-item-table {
+    width: 100%;
+}
+
+.parse-items-too-item-name{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.parse-items-too-item-detail{
+    font-size: 12px;
+}
+
+.parse-items-too-item-cell-button{
+    text-align: center;
+}
+
+.parse-items-too-item-table tr:nth-child(odd) td{
+    background-color: #EEEEEE;
+}
+.parse-items-too-item-table tr:nth-child(even) td{
+    background-color: #FFFFFF;
+}
+
+/*
+ *      EDITOR STYLING
+ */
+
+.parse-items-too-editor-item-box{
+    width: 100%;
+    background-color: #A9C9E0;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 4px;
+    margin: 5px;
+    display: flex;
+}
+
 .parse-items-too-editor-item-name{
     font-weight: bold;
 }
 
 .parse-items-too-editor-item-text{
 
+}
+
+
+
+/*  ####  ###   ####  #     #      ####
+ * #      #  #  #     #     #     #
+ *  ###   ###   ##    #     #      ###
+ *     #  #     #     #     #         #
+ * ####   #     ####  ####  ####  ####
+*/
+
+
+.parse-items-too-spell-view{
+    /*border: 1px solid black;*/
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.parse-items-too-spell-table {
+    width: 100%;
+}
+
+.parse-items-too-spell-name{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.parse-items-too-spell-detail{
+    font-size: 12px;
+}
+
+.parse-items-too-spell-cell-button{
+    text-align: center;
+}
+
+.parse-items-too-spell-table tr:nth-child(odd) td{
+    background-color: #EEEEEE;
+}
+.parse-items-too-spell-table tr:nth-child(even) td{
+    background-color: #FFFFFF;
 }

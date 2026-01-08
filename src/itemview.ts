@@ -56,6 +56,10 @@ export class MyItemView extends ItemView
         // Auto-cleaned when the view unloads:
         const ref: EventRef = this.plugin.myItemary.on( "changed", () => this.render() );
         this.registerEvent(ref); // OK: ref is EventRef
+
+        //have to render if itemary is ready - or better: as soon as itemary is read
+        // - if itemary is not ready yet, it should trigger a render soon
+        if( this.plugin.myItemary.isReady ) this.render("");
     }
 
     private requestRender = (() => {
@@ -115,7 +119,7 @@ export class MyItemView extends ItemView
 
         if( results.length == 0 ) return;
 
-        const table = container.createEl("table", { cls: "parse-items-too-items-table" });
+        const table = container.createEl("table", { cls: "parse-items-too-item-table" });
         const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
         const header = thead.createEl("tr");
@@ -129,8 +133,8 @@ export class MyItemView extends ItemView
 
         for( const i of results )
         {
-            const tr = tbody.createEl("tr", { cls: "parse-items-too-items-row", attr: { tabindex: "0" } });
-            const td = tr.createEl( "td", { cls: "parse-items-too-tem-cell" } );
+            const tr = tbody.createEl("tr", { cls: "parse-items-too-item-row", attr: { tabindex: "0" } });
+            const td = tr.createEl( "td", { cls: "parse-items-too-item-cell" } );
                 td.createDiv( { text: i.name, cls: "parse-items-too-item-name" } );
                 td.createDiv( { text: i.detail, cls: "parse-items-too-item-detail" } );
 
