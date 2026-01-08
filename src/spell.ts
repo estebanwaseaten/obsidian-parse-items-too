@@ -15,6 +15,7 @@ export interface MySpell
     levelInt: number;
     school: string;
     classes: string;
+    classArray: string[];
 }
 
 

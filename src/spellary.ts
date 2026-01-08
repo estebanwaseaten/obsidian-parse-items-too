@@ -4,7 +4,8 @@ import { MySpell } from "./spell";
 
 export class Spellary extends Events
 {
-    #spells: MySpell[] = []
+    #spells: MySpell[] = [];
+    #classes: string[] = [];
     isReady: boolean = false;
 
     constructor( public readonly app: App) { super(); }
@@ -22,12 +23,12 @@ export class Spellary extends Events
             this.#spells = this.#spells.filter(x => x != null);
         }
 
-        /*for( const spell of this.#spells )
-        {
-            console.debug( "spell loaded: " + spell.name );
-        }*/
+        //classes array is populated during extractSpellsFromFrontmatter()
 
         console.debug( "Extracted " + this.#spells.length + " spells.");
+        //console.log( this.#classes );
+
+
         this.isReady = true;
         this.trigger( "changed" ); //notifies all listeners
     }
@@ -35,6 +36,11 @@ export class Spellary extends Events
     getSpells(): readonly MySpell[]
     {
         return this.#spells;
+    }
+
+    getClasses(): readonly string[]
+    {
+        return this.#classes;
     }
 
     hasCssClass( frontMatter: FrontMatterCache | null | undefined, cssClass: string ): boolean
@@ -89,8 +95,9 @@ export class Spellary extends Events
         let duration: string = "";
         let level: string = "";
         let school: string = "";
-        let classes: string[] = [];
-        let levelInt: number = 0;
+        let classes: string = "";
+        let levelInt: number = -1;
+        let classArray: string[] = [];
 
         if( fm )
         {
@@ -137,6 +144,7 @@ export class Spellary extends Events
                 else if( level_lower.includes("7th")){levelInt = 7;}
                 else if( level_lower.includes("8th")){levelInt = 8;}
                 else if( level_lower.includes("9th")){levelInt = 9;}
+                else if( level_lower.includes("cantrip")){levelInt = 0;}
             }
 
             if( typeof fm["dndata-school"] === "string" )
@@ -150,19 +158,24 @@ export class Spellary extends Events
                     for (let index = 0; index < fm["dndata-classes"].length-1; index++)
                     {
                         classes += fm["dndata-classes"][index] + ", ";
+                        classArray.push( fm["dndata-classes"][index] );
+                        if( !this.#classes.includes( fm["dndata-classes"][index] ) ){ this.#classes.push( fm["dndata-classes"][index] ); }
                     }
-                    classes += ( fm["dndata-classes"].pop() ?? "" ) + ")";
+                    const index = fm["dndata-classes"].length-1;
+                    classes += fm["dndata-classes"][index] + ")";
+                    classArray.push( fm["dndata-classes"][index] );
+                    if( !this.#classes.includes( fm["dndata-classes"][index] ) ){ this.#classes.push( fm["dndata-classes"][index] ); }
                 }
+                 this.#classes.sort();
             }
         }
-        else   
+        else
         { name = file.basename; }
 
         //extract markdown link to this file
         const sourcePath = file.path;
         const markdownlink = this.app.fileManager.generateMarkdownLink( file, "", "", name );
 
-        //console.debug( "extracted: " + name );
 
         //must return spell
         return {
@@ -179,6 +192,7 @@ export class Spellary extends Events
                 levelInt: levelInt,
                 school: school,
                 classes: classes,
+                classArray: classArray,
             };
     }
 }
