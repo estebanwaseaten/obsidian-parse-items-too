@@ -1,4 +1,4 @@
-import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon, Notice } from "obsidian";
+import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon } from "obsidian";
 import type { MenuItem } from "obsidian";
 import type ParseItemsToo from "./main";     //only for default export
 import { MySpell } from "./spell";       //general export
@@ -200,10 +200,6 @@ export class MySpellView extends ItemView
         console.debug( "file path: " + i.filePath )
         if( i.imagePath )
             console.debug( "image path: " + i.imagePath );
-
-        //console.debug( "variants: " + i.variants );
-        //if( i.variants.length > 0 )
-            //new Notice( i.variants );
     }
 
     private rightclickSpell( i: MySpell, evt: MouseEvent )
@@ -214,47 +210,23 @@ export class MySpellView extends ItemView
     private clickLink( i: MySpell )
     {
         console.debug("click link...");
-        if( i.variants?.length > 0 )
-            new Notice( "Right click vor variants..." );
-
         void this.plugin.insertIntoEditor( i.markdownlink );
     }
 
     private rightclickLink( i: MySpell, evt: MouseEvent )
     {
         console.debug("rightclick link...");
-        this.makeVariantMenu( i, evt, (variant) => { void this.plugin.insertIntoEditor( variant.markdownlink ); } );
-    }
-
-    private makeVariantMenu( i: MySpell, evt: MouseEvent, clickMethod: (variant: MyVariant) => void  )
-    {
-        if( i.variants.length > 0 )
-        {
-            const m = new Menu( this.plugin );
-
-            i.variants.forEach( variant => {
-                m.addSpell((spell) => {
-                     spell.setTitle(variant.name);
-                     spell.onClick(() => { clickMethod( variant ); });
-                });
-            });
-
-            m.showAtMouseEvent(evt);
-        }
     }
 
     private clickGo( i: MySpell )
     {
         console.debug("click go...");
-        if( i.variants?.length > 0 )
-            new Notice( "Right click vor variants..." );
         void this.plugin.openInEditor( i.markdownlink );
     }
 
     private rightclickGo( i: MySpell, evt: MouseEvent )
     {
         console.debug("rightclick go...");
-         this.makeVariantMenu( i, evt, (variant) => { void this.plugin.openInEditor( variant.markdownlink ); } );
     }
 
 
@@ -306,7 +278,7 @@ export class MySpellView extends ItemView
         const m = new Menu( this.plugin );
 
         const addSortKey = (title: string, key: SortKey, icon: string) => {
-                m.addItem( (spell: MenuSpell) => {
+                m.addItem( (spell: MenuItem) => {
                      spell.setTitle(title).setIcon( icon );
                      // setChecked is available in recent Obsidian versions
                      spell.setChecked?.(this.sort.key === key);

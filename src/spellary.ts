@@ -66,18 +66,6 @@ export class Spellary extends Events
         return classes.includes( cssClass );
     }
 
-    extractVariant(  file: TFile, variantName: string ): MyVariant
-    {
-        //const this.plugin.
-        const markdownlink: string = this.app.fileManager.generateMarkdownLink( file, "", "#" + variantName, variantName );
-        //console.debug( "variant: " + markdownlink );
-
-        return{
-                    name: variantName,
-                    markdownlink: markdownlink,
-                };
-    }
-
     extractSpellsFromFrontmatter( file: TFile, frontmatter: FrontMatterCache | null | undefined ): MySpell
     {
         const fm = frontmatter as ( Record<string, unknown> );
@@ -85,8 +73,8 @@ export class Spellary extends Events
         let name: string = "";
         let imagepath: string = "";
 
-        let detailstring: string = "";
-        let infostring: string = "";
+        //let detailstring: string = "";
+        //let infostring: string = "";
         let castingtime: string = "";
 
         let isritual: boolean = false;
@@ -157,14 +145,21 @@ export class Spellary extends Events
                     classes = "(";
                     for (let index = 0; index < fm["dndata-classes"].length-1; index++)
                     {
-                        classes += fm["dndata-classes"][index] + ", ";
-                        classArray.push( fm["dndata-classes"][index] );
-                        if( !this.#classes.includes( fm["dndata-classes"][index] ) ){ this.#classes.push( fm["dndata-classes"][index] ); }
+                        const thisClass: unknown = fm['dndata-classes']?.[index];
+                        if ( typeof thisClass === "string")
+                        {
+                            classes += thisClass + ", ";
+                            classArray.push( thisClass );
+                            if( !this.#classes.includes( thisClass ) ){ this.#classes.push( thisClass ); }
+                        }
                     }
                     const index = fm["dndata-classes"].length-1;
-                    classes += fm["dndata-classes"][index] + ")";
-                    classArray.push( fm["dndata-classes"][index] );
-                    if( !this.#classes.includes( fm["dndata-classes"][index] ) ){ this.#classes.push( fm["dndata-classes"][index] ); }
+                    const thisClass: unknown = fm['dndata-classes']?.[index];
+                    if ( typeof thisClass === "string")
+                    {
+                        classes += thisClass + ")";
+                        classArray.push( thisClass );
+                    }
                 }
                  this.#classes.sort();
             }

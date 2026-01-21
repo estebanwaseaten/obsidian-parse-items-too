@@ -28,6 +28,7 @@ export default class ParseItemsToo extends Plugin {
 		this.addRibbonIcon('sword', 'D&D items', (evt: MouseEvent) => {
 			 void this.openItemsPane();
 		});
+		// eslint-disable-next-line obsidianmd/ui/sentence-case
         this.addRibbonIcon('scroll', 'D&D spells', (evt: MouseEvent) => {
 			 void this.openSpellsPane();
 		});
