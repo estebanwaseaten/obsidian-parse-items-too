@@ -3,7 +3,7 @@
 	"name": "Parse Items too...",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Create List of items and spells similar to the Bestiary in Fantasy Statblocks.",
+	"description": "Create List of items and spells from 5etools data of books that you own similar to the Bestiary in Fantasy Statblocks. ",
 	"author": "Daniel Wegkamp",
 	"authorUrl": "",
 	"fundingUrl": "",

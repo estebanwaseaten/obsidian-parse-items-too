@@ -49,7 +49,6 @@ export default class ParseItemsToo extends Plugin {
         this.mySpellary = new Spellary( this.app );
         this.app.workspace.onLayoutReady( () => this.mySpellary.build( this.app ) );
 
-
 		//whenever the edit leaf changes, write to tracker this.lastMdLeaf:
 		this.registerEvent(
       		this.app.workspace.on("active-leaf-change", (leaf) => {
