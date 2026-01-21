@@ -6,7 +6,7 @@
 	"description": "Create List of items and spells from 5etools data of books that you own similar to the Bestiary in Fantasy Statblocks. Data needs to be extracted with ttrpg-convert-cli by Erin Schnabel (https://github.com/ebullient)
 	with custom templates: images-monster2md_custom.txt, images-spell2md_custom.txt and images-item2md-custom.txt (available at https://github.com/estebanwaseaten/obsidian-parse-items-too)",
 	"author": "Daniel Wegkamp",
-	"authorUrl": "",
+	"authorUrl": "https://github.com/estebanwaseaten/obsidian-parse-items-too",
 	"fundingUrl": "",
 	"isDesktopOnly": false
 }
