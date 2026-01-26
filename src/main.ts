@@ -1,6 +1,6 @@
 import { MarkdownView, Notice, Plugin, WorkspaceLeaf } from 'obsidian';
 import { DEFAULT_SETTINGS, ParseItemsTooSettings, ParseItemsTooSettingsTab } from "./settings";
-
+import { postProcessorIcons } from './markdown';
 import { ITEM_VIEW, MyItemView } from "./itemview";
 import { Itemary } from "./itemary"
 import { SPELL_VIEW, MySpellView } from "./spellview";
@@ -22,7 +22,7 @@ export default class ParseItemsToo extends Plugin {
 
 		console.debug("loading Parse Items too...");
 		await this.loadSettings();
-
+ 
 		// This creates an icon in the left ribbon.
 		// eslint-disable-next-line obsidianmd/ui/sentence-case
 		this.addRibbonIcon('sword', 'D&D items', (evt: MouseEvent) => {
@@ -33,24 +33,24 @@ export default class ParseItemsToo extends Plugin {
 			 void this.openSpellsPane();
 		});
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		//const statusBarItemEl = this.addStatusBarItem();
-		//statusBarItemEl.setText('Status bar text');
-
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab( new ParseItemsTooSettingsTab( this.app, this ) );
 
-
+		//register views
 		this.registerView( ITEM_VIEW, ( leaf: WorkspaceLeaf ) => new MyItemView( leaf, this ) );
         this.registerView( SPELL_VIEW, ( leaf: WorkspaceLeaf ) => new MySpellView( leaf, this ) );
 
+		// create functional parts of the plugin
 		this.myItemary = new Itemary( this.app );
 		this.app.workspace.onLayoutReady( () => this.myItemary.build( this.app ) );
 
         this.mySpellary = new Spellary( this.app );
         this.app.workspace.onLayoutReady( () => this.mySpellary.build( this.app ) );
 
-		//whenever the edit leaf changes, write to tracker this.lastMdLeaf:
+		//register markdown post-processor
+		this.registerMarkdownPostProcessor( postProcessorIcons( this ) );
+
+		//whenever the edit leaf changes, write to tracker variable this.lastMdLeaf:
 		this.registerEvent(
       		this.app.workspace.on("active-leaf-change", (leaf) => {
         		const mv = this.app.workspace.getActiveViewOfType( MarkdownView );
@@ -143,8 +143,6 @@ export default class ParseItemsToo extends Plugin {
 					});
 		}
 	}
-
-
 
 	async insertIntoEditor(text: string)
 	{

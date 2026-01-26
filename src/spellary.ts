@@ -86,6 +86,9 @@ export class Spellary extends Events
         let classes: string = "";
         let levelInt: number = -1;
         let classArray: string[] = [];
+        let detail: string = '';
+        let infotext: string = '';
+
 
         if( fm )
         {
@@ -107,7 +110,7 @@ export class Spellary extends Events
             if( typeof fm["dndata-castingtime"] === "string" )
             { castingtime = fm["dndata-castingtime"]; }
 
-            if( typeof fm["dndata-isritual"] === "boolean" )
+            if( typeof fm["dndata-ritual"] === "boolean" )
             { isritual = fm["dndata-ritual"]; }
 
             if( typeof fm["dndata-range"] === "string" )
@@ -142,7 +145,7 @@ export class Spellary extends Events
             {
                 if( fm["dndata-classes"].length > 0 )
                 {
-                    classes = "(";
+                    classes = "";
                     for (let index = 0; index < fm["dndata-classes"].length-1; index++)
                     {
                         const thisClass: unknown = fm['dndata-classes']?.[index];
@@ -157,7 +160,7 @@ export class Spellary extends Events
                     const thisClass: unknown = fm['dndata-classes']?.[index];
                     if ( typeof thisClass === "string")
                     {
-                        classes += thisClass + ")";
+                        classes += thisClass;
                         classArray.push( thisClass );
                     }
                 }
@@ -167,10 +170,17 @@ export class Spellary extends Events
         else
         { name = file.basename; }
 
+        detail += (level === "" ? "" : level + ', ');
+        detail += (castingtime === "" ? "" : castingtime + ', ');
+        detail += (components === "" ? "" : components + ', ');
+        detail += (isritual ? " ritual, " : "");
+
+        infotext += 'classes: ' + classes;
+
+
         //extract markdown link to this file
         const sourcePath = file.path;
         const markdownlink = this.app.fileManager.generateMarkdownLink( file, "", "", name );
-
 
         //must return spell
         return {
@@ -186,8 +196,10 @@ export class Spellary extends Events
                 level: level,
                 levelInt: levelInt,
                 school: school,
-                classes: classes,
+                classes: '(' + classes + ')',
                 classArray: classArray,
+                detail: detail.slice( 0, -2 ),
+                infotext: infotext,
             };
     }
 }

@@ -13,6 +13,8 @@ export interface MySpell
     duration: string;
     level: string;
     levelInt: number;
+    detail: string;
+    infotext: string;
     school: string;
     classes: string;
     classArray: string[];

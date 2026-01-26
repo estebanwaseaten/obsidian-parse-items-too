@@ -2,6 +2,7 @@ import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzyS
 import type { MenuItem } from "obsidian";
 import type ParseItemsToo from "./main";     //only for default export
 import { MyVariant, MyItem } from "./item";       //general export
+import { getIconSVG } from "./common";
 //import type { MyVariant, MyItem } from "./item";       //general export
 
 export const ITEM_VIEW = "parse-items-too-item-pane";
@@ -184,7 +185,7 @@ export class MyItemView extends ItemView
         if( i.variants?.length > 0 )
             new Notice( "Right click vor variants..." );
 
-        void this.plugin.insertIntoEditor( i.markdownlink );
+        void this.plugin.insertIntoEditor( i.markdownlink + '{icon=' + i.type + '}' );
     }
 
     private rightclickLink( i: MyItem, evt: MouseEvent )
@@ -224,13 +225,25 @@ export class MyItemView extends ItemView
          this.makeVariantMenu( i, evt, (variant) => { void this.plugin.openInEditor( variant.markdownlink ); } );
     }
 
-
-
     private clickBox( i: MyItem )
     {   // cannot use createElement() or createDiv(), because it will throw an error because of the vault relative path in the <img> imgTag
         // the vault relative path is needed, though, so the paths dont break when synicing the vault to a different computer.
         // --> html block has to be created as a string:
-        const pre = '<div class="parse-items-too-editor-item-box"><div class="parse-items-too-editor-textblock"><div class="parse-items-too-editor-item-name">' + i.name + '</div><div class="parse-items-too-editor-item-text">' + i.detail + " " + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
+        let svgString: string = '';
+        if( i.type === 'item' )
+        {
+            svgString = getIconSVG( 'circle-star' );
+        }
+        else if ( i.type === 'weapon' )
+        {
+            svgString = getIconSVG( 'sword' );
+        }
+        else if ( i.type === 'armor' )
+        {
+            svgString = getIconSVG( 'shield-half' );
+        }
+
+        const pre = '<div class="parse-items-too-editor-item-box"><div class="parse-items-too-editor-textblock"><div class="parse-items-too-editor-item-header"><div class="parse-items-too-editor-item-icon">'+ svgString +'</div><div class="parse-items-too-editor-item-name">' + i.name + '</div></div><div class="parse-items-too-editor-item-text">' + i.detail + " " + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
         const post = '</div>';
         let imgTag: string = '';
         if( i.imagePath !== "" )

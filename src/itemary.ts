@@ -13,7 +13,7 @@ export class Itemary extends Events
 
     build( app: App )
     {
-        const files: TFile[] = app.vault.getMarkdownFiles();
+        const files: TFile[] = app.vault.getMarkdownFiles();    //only with source folder??
         for( const file of files )
         {
             const frontMatter = app.metadataCache.getFileCache( file )?.frontmatter;
@@ -86,6 +86,7 @@ export class Itemary extends Events
         let rarity: string = "";
         let rarityInt = 0;
         let variants: MyVariant[] = [];
+        let type: string = "item";
         if( fm )
         {
             if( typeof  fm["dndata-name"] === "string" )
@@ -127,11 +128,17 @@ export class Itemary extends Events
 
             let infoarray: string[] = [];
             if( typeof fm["dndata-damage"] === "string" )  //assume weapon:
-            { infoarray.push("Damage: " + fm["dndata-damage"]); }
+            {
+                infoarray.push("Damage: " + fm["dndata-damage"]);
+                type = "weapon";
+            }
             if( typeof fm["dndata-damage2"] === "string" )  //assume weapon:
             { infoarray.push("Two-handed: " + fm["dndata-damage2"]); }
             if( typeof fm["dndata-ac"] === "string" ) //assume armor
-            { infoarray.push("AC: " + fm["dndata-ac"]); }
+            {
+                infoarray.push("AC: " + fm["dndata-ac"]);
+                type = "armor";
+            }
             if( cost !== "" ) //assume armor
             { infoarray.push("cost: " + cost); }
             if( typeof fm["dndata-weight"] === "string" ) //assume armor
@@ -183,6 +190,7 @@ export class Itemary extends Events
                 rarity: rarity,
                 rarityInt: rarityInt,
                 variants: variants,
+                type: type,
             };
     }
 }

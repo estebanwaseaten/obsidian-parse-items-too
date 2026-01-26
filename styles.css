@@ -83,6 +83,16 @@ If your plugin does not need CSS, delete this file.
   display: block;
 }
 
+
+
+.parse-items-too-editor-link-icon{
+    margin-top: 6px;
+    margin-right: 3px;
+}
+
+
+
+
 /*   #  #####  ####  #   #   ####
  *   #    #    #     ## ##  #
  *   #    #    ##    # # #   ###
@@ -113,6 +123,7 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-item-cell-button{
     text-align: center;
+    width: 20px;
 }
 
 .parse-items-too-item-table tr:nth-child(odd) td{
@@ -136,13 +147,30 @@ If your plugin does not need CSS, delete this file.
     display: flex;
 }
 
+.parse-items-too-editor-textblock{}
+
+.parse-items-too-editor-item-header{
+    display: flex;
+
+}
+
+
 .parse-items-too-editor-item-name{
     font-weight: bold;
+    width: auto;
 }
+
+.parse-items-too-editor-item-icon{
+    width: auto;
+    margin-top: 3px;
+    margin-right: 10px;
+}
+
 
 .parse-items-too-editor-item-text{
 
 }
+
 
 
 
@@ -177,6 +205,7 @@ If your plugin does not need CSS, delete this file.
 
 .parse-items-too-spell-cell-button{
     text-align: center;
+    width: 20px;
 }
 
 .parse-items-too-spell-table tr:nth-child(odd) td{
@@ -184,4 +213,46 @@ If your plugin does not need CSS, delete this file.
 }
 .parse-items-too-spell-table tr:nth-child(even) td{
     background-color: #FFFFFF;
+}
+
+
+/*
+ *      EDITOR STYLING
+ */
+
+.parse-items-too-editor-spell-box{
+    width: 100%;
+    background-color: #e0c0a9;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 4px;
+    margin: 5px;
+    display: flex;
+}
+
+.parse-items-too-editor-textblock{}
+
+.parse-items-too-editor-spell-header{
+    display: flex;
+}
+
+
+.parse-items-too-editor-spell-name{
+    font-weight: bold;
+    width: auto;
+}
+
+.parse-items-too-editor-spell-school{
+    margin-left: 3px;
+    width: auto;
+}
+
+.parse-items-too-editor-spell-icon{
+    width: auto;
+    margin-top: 3px;
+    margin-right: 10px;
+}
+
+.parse-items-too-editor-spell-text{
+
 }

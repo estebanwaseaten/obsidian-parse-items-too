@@ -1,7 +1,8 @@
-import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon } from "obsidian";
+import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon, getIcon } from "obsidian";
 import type { MenuItem } from "obsidian";
 import type ParseItemsToo from "./main";     //only for default export
 import { MySpell } from "./spell";       //general export
+import { getIconSVG } from "./common";
 //import type { MyVariant, MySpell } from "./spell";       //general export
 
 export const SPELL_VIEW = "parse-items-too-spell-pane";
@@ -44,7 +45,7 @@ export class MySpellView extends ItemView
 
         const header = root.createDiv("parse-items-too-header")
         const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
-        search.setPlaceholder("Search for spells...");
+        search.setPlaceholder("Search for spells.....");
 
 
 
@@ -145,24 +146,26 @@ export class MySpellView extends ItemView
         if( results.length == 0 ) return;
 
         const table = container.createEl("table", { cls: "parse-items-too-spell-table" });
-        const thead = table.createEl("thead");
+        //const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
-        const header = thead.createEl("tr");
-        header.createEl( "th", "Name" );
-        header.createEl( "th", "" );
-        header.createEl( "th", "" );
+        //const header = thead.createEl("tr");
         //header.createEl( "th", "" );
-        header.createEl( "th", "" );
+        //header.createEl( "th", "" );
+        //header.createEl( "th", "" );
+    //    header.createEl( "th", "" );
+    //    header.createEl( "th", "" );
 
         tbody.empty();
 
         for( const i of results )
         {
-            let  detail: string = "";
+            /*let  detail: string = "";
             detail += (i.level === "" ? "" : i.level + ', ');
             detail += (i.castingtime === "" ? "" : i.castingtime + ', ');
             detail += (i.components === "" ? "" : i.components + ', ');
-            detail += (i.ritual ? " (ritual)" : "");
+            detail += (i.ritual ? " (ritual)" : "");*/
+
+            const detail = i.detail;
 
             const tr = tbody.createEl("tr", { cls: "parse-items-too-spell-row", attr: { tabindex: "0" } });
             const td = tr.createEl( "td", { cls: "parse-items-too-spell-cell" } );
@@ -173,8 +176,8 @@ export class MySpellView extends ItemView
 
             const insertLink = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
             setIcon( insertLink,'link');
-            //const insertBox = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
-            //setIcon(insertBox,'gallery-vertical');
+            const insertBox = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
+            setIcon(insertBox,'gallery-vertical');
             const go = tr.createEl( "td", { text: "", cls: "parse-items-too-spell-cell-button" } );
             setIcon( go,'external-link');
 
@@ -182,10 +185,12 @@ export class MySpellView extends ItemView
             td.addEventListener( "contextmenu", ( evt ) => this.rightclickSpell( i, evt ));
             //td.addEventListener( "keydown", (ev) => {
             //                    if (ev.key === "Enter") this.clickSpell(i); });
+
             insertLink.addEventListener( "click", () => this.clickLink( i ));
             insertLink.addEventListener( "contextmenu", ( evt ) => this.rightclickLink( i, evt ));
 
-            //insertBox.addEventListener( "click", () => this.clickBox( i ));
+            insertBox.addEventListener( "click", () => this.clickBox( i ));
+            //insertBox.addEventListener( "contextmenu", ( evt ) => this.rightclickBox( i, evt ));
 
             go.addEventListener( "click", () => this.clickGo( i ));
             go.addEventListener( "contextmenu", ( evt ) => this.rightclickGo( i, evt ));
@@ -210,13 +215,32 @@ export class MySpellView extends ItemView
     private clickLink( i: MySpell )
     {
         console.debug("click link...");
-        void this.plugin.insertIntoEditor( i.markdownlink );
+        void this.plugin.insertIntoEditor( i.markdownlink + '{icon=spell}' );
     }
 
     private rightclickLink( i: MySpell, evt: MouseEvent )
     {
         console.debug("rightclick link...");
     }
+
+    private clickBox( i: MySpell )
+    {   // cannot use createElement() or createDiv(), because it will throw an error because of the vault relative path in the <img> imgTag
+        // the vault relative path is needed, though, so the paths dont break when synicing the vault to a different computer.
+        // --> html block has to be created as a string:
+        //const spellSVG = "x";
+
+        const svgString = getIconSVG( 'scroll' );
+
+        const header = '<div class="parse-items-too-editor-spell-header"><div class="parse-items-too-editor-spell-icon">' + svgString + '</div><div class="parse-items-too-editor-spell-name">' + i.name + '</div><div class="parse-items-too-editor-spell-school"> (' + i.school + ')</div></div>';
+
+        const pre = '<div class="parse-items-too-editor-spell-box"><div class="parse-items-too-editor-textblock">' + header + '<div class="parse-items-too-editor-spell-text">' + i.detail + '</div><div class="parse-items-too-editor-spell-text">' + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
+        const post = '</div>';
+        let imgTag: string = '';
+        if( i.imagePath !== "" )
+        { imgTag = '<div class="parse-items-too-editor-imgblock"><div class="parse-items-too-editor-imgbgblock"><img src="' + i.imagePath + '"></div></div>'; }
+        void this.plugin.insertIntoEditor( pre + imgTag + post );
+    }
+
 
     private clickGo( i: MySpell )
     {
@@ -231,17 +255,6 @@ export class MySpellView extends ItemView
 
 
 
-    private clickBox( i: MySpell )
-    {   // cannot use createElement() or createDiv(), because it will throw an error because of the vault relative path in the <img> imgTag
-        // the vault relative path is needed, though, so the paths dont break when synicing the vault to a different computer.
-        // --> html block has to be created as a string:
-        const pre = '<div class="parse-items-too-editor-spell-box"><div class="parse-items-too-editor-textblock"><div class="parse-items-too-editor-spell-name">' + i.name + '</div><div class="parse-items-too-editor-spell-text">' + i.detail + " " + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
-        const post = '</div>';
-        let imgTag: string = '';
-        if( i.imagePath !== "" )
-        { imgTag = '<div class="parse-items-too-editor-imgblock"><div class="parse-items-too-editor-imgbgblock"><img src="' + i.imagePath + '"></div></div>'; }
-        void this.plugin.insertIntoEditor( pre + imgTag + post );
-    }
 
     private openFilterLevelMenu( evt: MouseEvent )
     {
