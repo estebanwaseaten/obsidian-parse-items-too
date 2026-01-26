@@ -23,10 +23,15 @@ export function postProcessorIcons( plugin: Plugin ): MarkdownPostProcessor
 
             //console.log( "icon name: " + iconName );
 
-            const iconEl = createSpan({ cls: 'parse-items-too-editor-link-icon' });
+            a.classList.add( 'parse-items-too-editor-link-text');
+            const containerEl = createDiv( {cls: 'parse-items-too-editor-link-container'});
+            const iconEl = containerEl.createSpan({ cls: 'parse-items-too-editor-link-icon' });
             setIcon(iconEl, iconName);
-            //a.prepend(iconEl);
-            a.before(iconEl);
+            //setIcon(containerEl, iconName);
+            //containerEl.append( a );
+            a.replaceWith( containerEl );
+            containerEl.append(a);
+            //a.before(iconEl);
             //a.classList.add( 'parse-items-too-link-with-icon', `parse-items-too-icon-${iconFromTrailing}`);
             (a as any)._iconDecorated = true;
         });

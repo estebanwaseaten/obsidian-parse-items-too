@@ -84,12 +84,17 @@ If your plugin does not need CSS, delete this file.
 }
 
 
-
-.parse-items-too-editor-link-icon{
-    margin-top: 6px;
-    margin-right: 3px;
+.parse-items-too-editor-link-container{
+    display: flex;
 }
 
+.parse-items-too-editor-link-icon{
+    padding-top: 4px;
+    margin-right: 6px;
+}
+
+.parse-items-too-editor-link-text{
+}
 
 
 
@@ -143,7 +148,8 @@ If your plugin does not need CSS, delete this file.
     border: 1px solid black;
     border-radius: 3px;
     padding: 4px;
-    margin: 5px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     display: flex;
 }
 

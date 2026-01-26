@@ -27,7 +27,9 @@ export class MySpellView extends ItemView
 
     private levelString: string[] = ["Cantrip", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9 "];
     //private classString: string[] = ["Barbarian", "Cleric", "Druid", "Fighter", "Monk"];
+
     private classArray: string[] = [];
+    private results: MySpell[];
 
 
     constructor(leaf: WorkspaceLeaf, public readonly plugin: ParseItemsToo )
@@ -68,12 +70,21 @@ export class MySpellView extends ItemView
         search.onChange( (q) => this.render(q) );
 
         // Auto-cleaned when the view unloads:
-        const ref: EventRef = this.plugin.mySpellary.on( "changed", () => this.render() );
+        const ref: EventRef = this.plugin.mySpellary.on( "changed", () => this.spellaryChanged() );
         this.registerEvent(ref); // OK: ref is EventRef
 
         //have to render as soon as Spellary is ready:
         // - if spellary is not ready yet, it should trigger a render soon
         if( this.plugin.mySpellary.isReady ) this.render("");
+    }
+
+    private spellaryChanged()
+    {
+        //1. update data
+        this.results = this.plugin.mySpellary.getSpells();
+        this.classArray = this.plugin.mySpellary.getClasses();         //should we ONLY get this when spellary is updated?
+        //2. render
+        this.render();
     }
 
     private requestRender = (() => {
@@ -87,22 +98,17 @@ export class MySpellView extends ItemView
 
     public render = (q: string ) =>  //arrow function
     {
-        //search:
-        let results: MySpell[];
-        results = this.plugin.mySpellary.getSpells();                  //should we ONLY get this when spellary is updated?
-        this.classArray = this.plugin.mySpellary.getClasses();         //should we ONLY get this when spellary is updated?
-
         if( this.levelQuery >= 0 )
         {
             //console.log('got number: ' + this.levelQuery);
-            results = results
+            this.results = this.results
                         .filter( spell => spell.levelInt === this.levelQuery );
         }
 
         if( this.classQuery !== "" )
         {
             //console.log('got number: ' + this.levelQuery);
-            results = results
+            this.results = this.results
                         .filter( spell => spell.classArray.includes(this.classQuery) );
         }
 
@@ -111,7 +117,7 @@ export class MySpellView extends ItemView
         {
             //console.debug("Parse Spells too: MySpellView.render()");
             //console.debug("all");
-            results = results.slice()    //clone not to modify source??
+            this.results = this.results.slice()    //clone not to modify source??
                             .sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul)
                             .slice( 0, 200 );
                             //.map(i => ({ i, m: null }));
@@ -121,7 +127,7 @@ export class MySpellView extends ItemView
             //console.debug("Parse Spells too: MySpellView.render("+q+")");
             //console.debug("subset");
             const score = prepareFuzzySearch( q );
-            results = results.map(i => ({ i, m: score(i.name) }))  //add score to MySpell object
+            this.results = this.results.map(i => ({ i, m: score(i.name) }))  //add score to MySpell object
                               .filter( x => x.m )
                               .sort( (a, b) => b.m!.score - a.m!.score )    //sort by score - ignore the sorting menu
                               .map( x => x.i )                                  //map back to MySpell object
@@ -143,28 +149,15 @@ export class MySpellView extends ItemView
         const container = this.resultsEl;
         container.empty();
 
-        if( results.length == 0 ) return;
+        if( this.results.length == 0 ) return;
 
         const table = container.createEl("table", { cls: "parse-items-too-spell-table" });
-        //const thead = table.createEl("thead");
         const tbody = table.createEl("tbody");
-        //const header = thead.createEl("tr");
-        //header.createEl( "th", "" );
-        //header.createEl( "th", "" );
-        //header.createEl( "th", "" );
-    //    header.createEl( "th", "" );
-    //    header.createEl( "th", "" );
 
         tbody.empty();
 
-        for( const i of results )
+        for( const i of this.results )
         {
-            /*let  detail: string = "";
-            detail += (i.level === "" ? "" : i.level + ', ');
-            detail += (i.castingtime === "" ? "" : i.castingtime + ', ');
-            detail += (i.components === "" ? "" : i.components + ', ');
-            detail += (i.ritual ? " (ritual)" : "");*/
-
             const detail = i.detail;
 
             const tr = tbody.createEl("tr", { cls: "parse-items-too-spell-row", attr: { tabindex: "0" } });
@@ -233,7 +226,7 @@ export class MySpellView extends ItemView
 
         const header = '<div class="parse-items-too-editor-spell-header"><div class="parse-items-too-editor-spell-icon">' + svgString + '</div><div class="parse-items-too-editor-spell-name">' + i.name + '</div><div class="parse-items-too-editor-spell-school"> (' + i.school + ')</div></div>';
 
-        const pre = '<div class="parse-items-too-editor-spell-box"><div class="parse-items-too-editor-textblock">' + header + '<div class="parse-items-too-editor-spell-text">' + i.detail + '</div><div class="parse-items-too-editor-spell-text">' + i.infotext + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
+        const pre = '<div class="parse-items-too-editor-spell-box"><div class="parse-items-too-editor-textblock">' + header + '<div class="parse-items-too-editor-spell-text">' + i.detail + '</div><a class="internal-link" href="'+i.filePath+'">go to source</a></div>';
         const post = '</div>';
         let imgTag: string = '';
         if( i.imagePath !== "" )
