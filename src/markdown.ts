@@ -5,13 +5,14 @@ import type { Plugin } from 'obsidian';
 
 export function postProcessorIcons( plugin: Plugin ): MarkdownPostProcessor
 {
-    const { app } = plugin; // access app, settings, etc.
+    //const { app } = plugin; // access app, settings, etc.
     return (el, ctx) =>
-    {
+    { 
         el.querySelectorAll('a.internal-link').forEach( (a) =>
         {
             //make sure we only process once:
-            if( (a as any)._iconDecorated ) return;
+            if (!(a instanceof Element)) return;
+            if (a.getAttribute('data-icon-decorated')) return;
 
             // Strategy 1: trailing text marker, e.g. [[Note]] {icon=wip}
             const iconFromTrailing = consumeTrailingIconMarker(a);
@@ -24,7 +25,7 @@ export function postProcessorIcons( plugin: Plugin ): MarkdownPostProcessor
             //console.log( "icon name: " + iconName );
 
             a.classList.add( 'parse-items-too-editor-link-text');
-            const containerEl = createDiv( {cls: 'parse-items-too-editor-link-container'});
+            const containerEl = a.createSpan( {cls: 'parse-items-too-editor-link-container'});
             const iconEl = containerEl.createSpan({ cls: 'parse-items-too-editor-link-icon' });
             setIcon(iconEl, iconName);
             //setIcon(containerEl, iconName);
@@ -32,8 +33,7 @@ export function postProcessorIcons( plugin: Plugin ): MarkdownPostProcessor
             a.replaceWith( containerEl );
             containerEl.append(a);
             //a.before(iconEl);
-            //a.classList.add( 'parse-items-too-link-with-icon', `parse-items-too-icon-${iconFromTrailing}`);
-            (a as any)._iconDecorated = true;
+            a.setAttribute('data-icon-decorated', '1');
         });
     }
 }

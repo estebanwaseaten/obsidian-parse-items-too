@@ -24,6 +24,7 @@ export interface MyItem
     rarityInt: number;
     type: string;
     variants: MyVariant[];
+    source: string;
 }
 
 

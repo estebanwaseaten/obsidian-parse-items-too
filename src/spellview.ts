@@ -1,4 +1,4 @@
-import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon, getIcon } from "obsidian";
+import { EventRef, ItemView, WorkspaceLeaf, SearchComponent, Menu, prepareFuzzySearch, setIcon } from "obsidian";
 import type { MenuItem } from "obsidian";
 import type ParseItemsToo from "./main";     //only for default export
 import { MySpell } from "./spell";       //general export
@@ -16,20 +16,39 @@ export class MySpellView extends ItemView
     // Keep a handle to the results container
     private resultsEl!: HTMLElement;
     private sortEl!: HTMLElement;
+    private searchEl!: HTMLElement;
+
     private filterLevelEl!: HTMLElement;
     private filterClassEl!: HTMLElement;
+    private filterSourceEl!: HTMLElement;
 
-    private lastQuery: string = "";
-    private levelQuery: number = -1;
-    private classQuery: string = "";    //all
+    //sets defined via: --> precalc indices in "spellaryChanged"
+    private levelArray: string[] = ["Cantrip", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9 "];
+    private classArray: string[] = [];
+    private sourceArray: string[] = [];
 
+    //mapping level and class string to a Set if indices: can be joined with other sets later
+    private levelIndex = new Map<number, Set<number>>();
+    private classIndex = new Map<string, Set<number>>();
+    private sourceIndex = new Map<string, Set<number>>();
+
+    //keep track of search and filter parameters
+    private searchQuery: string = "";
+    private searchQueryTimer: ReturnType<typeof setTimeout> | null = null;
+    private readonly searchQueryDebounce = 200;
+    private levelFilter: number[] = [];
+    private classFilter: string[] = [];
+    private sourceFilter: string[] = [];
+    private filtered: boolean = false;
+    private limit: number = 500;
+
+    //sort parameters
     private sort: { key: SortKey; dir: SortDir } = { key: "name", dir: "asc" };
 
-    private levelString: string[] = ["Cantrip", "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9 "];
-    //private classString: string[] = ["Barbarian", "Cleric", "Druid", "Fighter", "Monk"];
+    private filteredSet = new Set<number>();
 
-    private classArray: string[] = [];
-    private results: MySpell[];
+    private allSpells: MySpell[] = [];
+    private results: MySpell[] = [];
 
 
     constructor(leaf: WorkspaceLeaf, public readonly plugin: ParseItemsToo )
@@ -46,10 +65,9 @@ export class MySpellView extends ItemView
         root.addClass( "parse-items-too-spell-view" );
 
         const header = root.createDiv("parse-items-too-header")
-        const search = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
-        search.setPlaceholder("Search for spells.....");
-
-
+        this.searchEl = new SearchComponent( header.createDiv("parse-items-too-search-bar") );
+            this.searchEl.setPlaceholder("Search for spells.....");
+            this.searchEl.onChange( (q) => this.searchQueryChanged( q ) );
 
         this.filterClassEl = header.createDiv( { cls: "parse-items-too-filter" } );
         setIcon( this.filterClassEl, 'shield-question-mark');
@@ -59,33 +77,29 @@ export class MySpellView extends ItemView
         setIcon( this.filterLevelEl, 'book-plus');
         this.filterLevelEl.addEventListener( "click", (evt) => this.openFilterLevelMenu( evt ) );
 
+        this.filterSourceEl = header.createDiv( { cls: "parse-items-too-filter" } );
+        setIcon( this.filterSourceEl, 'book');
+        this.filterSourceEl.addEventListener( "click", (evt) => this.openFilterSourceMenu( evt ) );
+
         this.sortEl = header.createDiv( { cls: "parse-items-too-filter" } );
         setIcon( this.sortEl,'sort-asc' );
         this.sortEl.addEventListener( "click", (evt) => this.openSortMenu( evt ) );
 
-
-
         this.resultsEl = root.createDiv({ cls: "parse-items-too-search-results" });
 
-        search.onChange( (q) => this.render(q) );
+
 
         // Auto-cleaned when the view unloads:
+        // should this be done in the constructor?
         const ref: EventRef = this.plugin.mySpellary.on( "changed", () => this.spellaryChanged() );
         this.registerEvent(ref); // OK: ref is EventRef
 
         //have to render as soon as Spellary is ready:
         // - if spellary is not ready yet, it should trigger a render soon
-        if( this.plugin.mySpellary.isReady ) this.render("");
+        if( this.plugin.mySpellary.isReady ) this.spellaryChanged("");
     }
 
-    private spellaryChanged()
-    {
-        //1. update data
-        this.results = this.plugin.mySpellary.getSpells();
-        this.classArray = this.plugin.mySpellary.getClasses();         //should we ONLY get this when spellary is updated?
-        //2. render
-        this.render();
-    }
+
 
     private requestRender = (() => {
         let queued = false;
@@ -96,55 +110,177 @@ export class MySpellView extends ItemView
         };
     })();
 
-    public render = (q: string ) =>  //arrow function
+    private spellaryChanged()
     {
-        if( this.levelQuery >= 0 )
-        {
-            //console.log('got number: ' + this.levelQuery);
-            this.results = this.results
-                        .filter( spell => spell.levelInt === this.levelQuery );
-        }
+        //1. update data
+        this.allSpells = this.plugin.mySpellary.getSpells();
+        this.classArray = this.plugin.mySpellary.getClasses();         //should we ONLY get this when spellary is updated?
+        this.sourceArray = this.plugin.mySpellary.getSources();
 
-        if( this.classQuery !== "" )
-        {
-            //console.log('got number: ' + this.levelQuery);
-            this.results = this.results
-                        .filter( spell => spell.classArray.includes(this.classQuery) );
-        }
+        //2. index data:
+        this.rebuildIndices();
 
-        const dirMul = this.sort.dir === "asc" ? 1 : -1;
-        if( !q || q === "" )
-        {
-            //console.debug("Parse Spells too: MySpellView.render()");
-            //console.debug("all");
-            this.results = this.results.slice()    //clone not to modify source??
-                            .sort((a, b) => compareByKey(a, b, this.sort.key) * dirMul)
-                            .slice( 0, 200 );
-                            //.map(i => ({ i, m: null }));
+        //special case: set everything to default
+        this.filteredSet.clear();
+        this.searchQuery = ""
+        //should also reset the search field for consistency
+
+        this.updateResults();
+
+        //x. render
+        this.render();
+    }
+
+    private rebuildIndices()
+    {
+        console.log( 'spellview start building search indices...' );
+        //see itemview.ts - rebuildIndices() for comments
+        this.classIndex.clear();
+        this.levelIndex.clear();
+        this.sourceIndex.clear();
+
+        this.allSpells.forEach( (spell, arrInd) => {
+            spell.classArray.forEach( className => {
+                let classSet = this.classIndex.get( className );
+                if( !classSet )
+                {
+                    classSet = new Set<number>();
+                    this.classIndex.set( className, classSet )
+                }
+                classSet.add( arrInd );
+            });
+
+            let levelSet = this.levelIndex.get( spell.levelInt ); //spell.level is a string, spell.levelInt is numeric
+            if( !levelSet )
+            {
+                levelSet = new Set<number>();
+                this.levelIndex.set( spell.levelInt, levelSet );
+            }
+            levelSet.add(arrInd);
+
+            let sourceSet = this.sourceIndex.get( spell.source );
+            if( !sourceSet )
+            {
+                sourceSet = new Set<number>();
+                this.sourceIndex.set( spell.source, sourceSet );
+            }
+            sourceSet.add( arrInd );
+        });
+
+        console.log( 'spellview built search indices!' );
+    }
+
+    private filterChanged()
+    {
+        //console.log( 'filterChanged() - levelFilter: ' + this.levelFilter + ' classFilter: ' + this.classFilter );
+        // if this.levelFilter is empty --> all levels
+        // if this.classFilter is empty --> all Classes
+
+        //this.filteredSet.clear(); //--> all
+        this.filteredSet = new Set<number>(this.allSpells.keys());  //contains all keys
+
+        if( this.levelFilter.length == 0 && this.classFilter.length == 0 && this.sourceFilter.length == 0 )
+        {   //nothing to filter: full set? or flag?
+            this.filtered = false;
         }
         else
-        {   //text search --> sorting is off - best match comes first
-            //console.debug("Parse Spells too: MySpellView.render("+q+")");
-            //console.debug("subset");
-            const score = prepareFuzzySearch( q );
-            this.results = this.results.map(i => ({ i, m: score(i.name) }))  //add score to MySpell object
-                              .filter( x => x.m )
-                              .sort( (a, b) => b.m!.score - a.m!.score )    //sort by score - ignore the sorting menu
-                              .map( x => x.i )                                  //map back to MySpell object
-                              .slice( 0, 50 );                                //maximum 50 spells shown
-            //console.debug('after map', results[0]);
+        {
+            this.filtered = true;
+            //each filter category is a union (or)
+            //separate filter categories form an intersection (and)
+
+            if( this.levelFilter.length > 0 )
+            {
+
+                let levelFilterSet = new Set<number>();
+                this.levelFilter.forEach( levelInt => {
+                    if( this.levelIndex.has( levelInt ) )
+                    { levelFilterSet = levelFilterSet.union( this.levelIndex.get( levelInt )); }});
+                //console.log("levelFilter: " + levelFilterSet.size );
+                this.filteredSet = this.filteredSet.intersection( levelFilterSet );
+            }
+
+            if( this.classFilter.length > 0 )
+            {
+                let classFilterSet = new Set<number>();
+                this.classFilter.forEach( myClass => {
+                    if( this.classIndex.has( myClass ) )
+                    { classFilterSet = classFilterSet.union( this.classIndex.get( myClass )); }});
+                //console.log("classFilter: " + classFilterSet.size );
+                this.filteredSet = this.filteredSet.intersection( classFilterSet );
+            }
+
+            if( this.sourceFilter.length > 0 )
+            {
+                let sourceFilterSet = new Set<number>();
+                this.sourceFilter.forEach( source => {  //loop through selected rarities
+                    if( this.sourceIndex.has( source ) )
+                    { sourceFilterSet = sourceFilterSet.union( this.sourceIndex.get( source )); }});
+                //console.log("sourceFilter: " + sourceFilterSet.size );
+                this.filteredSet = this.filteredSet.intersection( sourceFilterSet );
+            }
         }
-        //console.debug("Parse Spells too: MySpellView.render() results: " + results[0].name);
-        //results = this.plugin.mySpellary.getSpells();
-        //sort:
+
+        this.updateResults();
+        this.render();
+    }
+
+    private sortingChanged()
+    {
+        console.log("sorting changed");
+        this.updateResults();
+        this.render();
+    }
+
+    private searchQueryChanged( q: string )
+    {
+        console.debug("spellview: searchQueryChanged()");
+        //filter?
+        this.searchQuery = q;
+
+        this.updateResults();
+        this.render();
+    }
+
+    private updateResults()
+    {
+        const dirMul = this.sort.dir === "asc" ? 1 : -1;
+
+        if( this.filtered )
+        {
+            this.results = Array.from( this.filteredSet, i => this.allSpells[i] );
+        }
+        else
+        {
+            this.results = this.allSpells.slice();
+        }
+
+        if( !this.searchQuery || this.searchQuery === "" )
+        {
+            this.results = this.results.sort( (a, b) => compareByKey(a, b, this.sort.key) * dirMul)
+                    .slice( 0, this.limit );
+        }
+        else
+        {
+            const score = prepareFuzzySearch( this.searchQuery );
+            this.results = this.results.map(i => ({ i, m: score(i.name) }))            //add score to MyItem object
+                    .filter( x => x.m )
+                    .sort( (a, b) => (b.m!.score - a.m!.score) || (compareByKey(a.i, b.i, this.sort.key) * dirMul) )          //sort by score and sorting direction
+                    .map( x => x.i )                                    //map back to MyItem object
+                    .slice( 0, this.limit );                            //maximum 50 items shown
+        }
+    }
+
+    public render = (q: string ) =>  //arrow function. why??
+    {
+        console.debug("MySpellView.render()" );
+
 
         //display:
         if( this.sort.dir === "asc")
             setIcon( this.sortEl,'sort-asc');
         else
             setIcon( this.sortEl,'sort-desc');
-
-        //setIcon( this.filterLevelEl, 'sliders-horizontal '); //why again?
 
         const container = this.resultsEl;
         container.empty();
@@ -247,20 +383,30 @@ export class MySpellView extends ItemView
     }
 
 
-
-
     private openFilterLevelMenu( evt: MouseEvent )
     {
         const m = new Menu( this.plugin );
 
-        for (let index = 0; index < this.levelString.length; index++)
+        for( let i = 0; i < this.levelArray.length; i++ )
         {
             m.addItem( ( menuItem ) => {
-                menuItem.setTitle( this.levelString[index] )
-                     .onClick(() => { this.levelQuery = (this.levelQuery === index) ? -1 : index; this.render( this.lastQuery); })
-                     .setChecked?.( this.levelQuery === index ); });
+                menuItem.setTitle(  this.levelArray[i] )
+                     .onClick( () =>
+                        {
+                            const index = this.levelFilter.indexOf( i );
+                            if( index > -1 )
+                            {
+                                this.levelFilter.splice( index, 1 );
+                            }
+                            else
+                            {
+                                console.log( "push levelFilter: " + i + this.levelFilter);
+                                this.levelFilter.push( i )
+                            }
+                            this.filterChanged();
+                        })
+                     .setChecked?.( this.levelFilter.includes( i ) ); });
         }
-
         m.showAtMouseEvent(evt);
     }
 
@@ -272,10 +418,49 @@ export class MySpellView extends ItemView
         {
             m.addItem( ( menuItem ) => {
                 menuItem.setTitle( characterClass )
-                     .onClick(() => { this.classQuery = (this.classQuery === characterClass) ? "" : characterClass; this.render( this.lastQuery ); })
-                     .setChecked?.( this.classQuery === characterClass ); });
+                     .onClick( () => {
+                         const index = this.classFilter.indexOf( characterClass );
+                         if( index > -1 )
+                         {
+                             this.classFilter.splice( index, 1 );
+                         }
+                         else
+                         {
+                             this.classFilter.push( characterClass );
+                         }
+                         this.filterChanged(); })
+                     .setChecked?.( this.classFilter.includes( characterClass ) ); });
         }
 
+        m.showAtMouseEvent(evt);
+    }
+
+    private openFilterSourceMenu( evt: MouseEvent )
+    {
+        const m = new Menu( this.plugin );
+        if( this.sourceArray.length == 0 )
+        {
+            m.addItem( ( menuItem ) => { menuItem.setTitle( "no sources" ) });
+            m.showAtMouseEvent(evt);
+            return;
+        }
+        for( const source of this.sourceArray )
+        {
+            m.addItem( ( menuItem ) => {
+                menuItem.setTitle( source )
+                     .onClick( () => {
+                         const index = this.sourceFilter.indexOf( source );
+                         if( index > -1 )
+                         {  //item exists --> remove it
+                             this.sourceFilter.splice(index, 1);
+                         }
+                         else
+                         {
+                             this.sourceFilter.push( source );
+                         }
+                        this.filterChanged(); })
+                     .setChecked?.( this.sourceFilter.includes( source ) ); });
+        }
         m.showAtMouseEvent(evt);
     }
 
@@ -288,7 +473,7 @@ export class MySpellView extends ItemView
                      spell.setTitle(title).setIcon( icon );
                      // setChecked is available in recent Obsidian versions
                      spell.setChecked?.(this.sort.key === key);
-                     spell.onClick(() => { this.sort.key = key; this.render( this.lastQuery ); });
+                     spell.onClick(() => { this.sort.key = key; this.sortingChanged(); });
                 });
             };
 
@@ -303,7 +488,7 @@ export class MySpellView extends ItemView
                 const label = next === "asc" ? "Ascending" : "Descending";
                 spell.setTitle(`Direction: ${label}`).setIcon( icon ).onClick(() => {
                             this.sort.dir = next;
-                            this.render( this.lastQuery );
+                            this.sortingChanged();
                         });
                     });
 

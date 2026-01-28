@@ -18,6 +18,7 @@ export interface MySpell
     school: string;
     classes: string;
     classArray: string[];
+    source: string;
 }
 
 

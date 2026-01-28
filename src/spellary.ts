@@ -6,6 +6,7 @@ export class Spellary extends Events
 {
     #spells: MySpell[] = [];
     #classes: string[] = [];
+    #sources: string[] = [];
     isReady: boolean = false;
 
     constructor( public readonly app: App) { super(); }
@@ -23,11 +24,7 @@ export class Spellary extends Events
             this.#spells = this.#spells.filter(x => x != null);
         }
 
-        //classes array is populated during extractSpellsFromFrontmatter()
-
         console.debug( "Extracted " + this.#spells.length + " spells.");
-        //console.log( this.#classes );
-
 
         this.isReady = true;
         this.trigger( "changed" ); //notifies all listeners
@@ -41,6 +38,11 @@ export class Spellary extends Events
     getClasses(): readonly string[]
     {
         return this.#classes;
+    }
+
+    getSources(): readonly string[]
+    {
+        return this.#sources;
     }
 
     hasCssClass( frontMatter: FrontMatterCache | null | undefined, cssClass: string ): boolean
@@ -88,7 +90,7 @@ export class Spellary extends Events
         let classArray: string[] = [];
         let detail: string = '';
         let infotext: string = '';
-
+        let source: string = '';
 
         if( fm )
         {
@@ -140,6 +142,15 @@ export class Spellary extends Events
 
             if( typeof fm["dndata-school"] === "string" )
             { school = fm["dndata-school"]; }
+
+            if( typeof fm["dndata-source"] === "string" )
+            {
+                source = fm["dndata-source"];
+                if( !this.#sources.includes( source ) )
+                {
+                    this.#sources.push( source );
+                }
+            }
 
             if( Array.isArray( fm["dndata-classes"] ) )
             {
@@ -200,6 +211,7 @@ export class Spellary extends Events
                 classArray: classArray,
                 detail: detail.slice( 0, -2 ),
                 infotext: infotext,
+                source: source,
             };
     }
 }

@@ -7,6 +7,7 @@ import { MyVariant, MyItem } from "./item";
 export class Itemary extends Events
 {
     #items: MyItem[] = []
+    #sources: string[] = [];
     isReady: boolean = false;
 
     constructor( public readonly app: App) { super(); }
@@ -24,12 +25,8 @@ export class Itemary extends Events
             this.#items = this.#items.filter(x => x != null);
         }
 
-        /*for( const item of this.#items )
-        {
-            console.debug( "item loaded: " + item.name );
-        }*/
-
         console.debug( "Extracted " + this.#items.length + " items.");
+
         this.isReady = true;
         this.trigger( "changed" ); //notifies all listeners
     }
@@ -38,6 +35,12 @@ export class Itemary extends Events
     {
         return this.#items;
     }
+
+    getSources(): readonly string[]
+    {
+        return this.#sources;
+    }
+
 
     hasCssClass( frontMatter: FrontMatterCache | null | undefined, cssClass: string ): boolean
     {
@@ -83,10 +86,11 @@ export class Itemary extends Events
         let detailstring: string = "";
         let infostring: string = "";
         let cost: string = "";
-        let rarity: string = "";
+        let rarity: string = "undefined";      //by default?
         let rarityInt = 0;
         let variants: MyVariant[] = [];
         let type: string = "item";
+        let source: string = "";
         if( fm )
         {
             if( typeof  fm["dndata-name"] === "string" )
@@ -155,6 +159,14 @@ export class Itemary extends Events
                 infostring += ( infoarray.pop() ?? "" ) + ")";
             }
 
+            if( typeof fm["dndata-source"] === "string" )
+            {
+                source = fm["dndata-source"];
+                if( !this.#sources.includes( source ) )
+                {
+                    this.#sources.push( source );
+                }
+            }
 
             if( Array.isArray( fm["dndata-variants"] ) )
             {
@@ -191,6 +203,7 @@ export class Itemary extends Events
                 rarityInt: rarityInt,
                 variants: variants,
                 type: type,
+                source: source,
             };
     }
 }

@@ -2,12 +2,13 @@ import { setIcon, getIcon } from "obsidian";
 
 export function getIconSVG( iconName: string): string
 {
-    const spellSVGelement = getIcon( iconName );
+    let spellSVGelement = getIcon( iconName );
+
     if( !spellSVGelement )
     {
         const tmp = document.createElement("div");
         setIcon(tmp, iconName );
-        const spellSVGelement = tmp.querySelector("svg");
+        spellSVGelement = tmp.querySelector("svg");
     }
 
     let svgString: string = 'x';
