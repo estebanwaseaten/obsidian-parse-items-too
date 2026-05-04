@@ -22,7 +22,7 @@ export default class ParseItemsToo extends Plugin {
 
 		console.debug("loading Parse Items too...");
 		await this.loadSettings();
- 
+
 		// This creates an icon in the left ribbon.
 		// eslint-disable-next-line obsidianmd/ui/sentence-case
 		this.addRibbonIcon('sword', 'D&D items', (evt: MouseEvent) => {
